@@ -255,27 +255,59 @@ This shift confirms our mathematical model from §1.3:
 
 ## 6. Objective 3 — Gate Split & Topological Routing Analysis
 
-### 6.1 Gate Decomposition Across Topologies
+### 6.1 Comprehensive Gate Decomposition Across All Processors
 
 ![Figure 5: Gate Split & Depth Scaling](results/figures/fig5_gate_split_and_depth.png)
 
-The complete resource metrics compiled in `results/tables/resources.csv` reveal the structural overhead imposed by processor coupling graphs:
+The complete resource telemetry compiled in `results/tables/resources.csv` systematically contrasts how processor topology and basis gate sets dictate two-qubit execution costs across all three candidate architectures:
 
-| Step Count $n$ | Logical 2Q Gates | Processor D 2Q Gates (RZZ) | Processor D SWAPs | Processor A 2Q Gates (CX) | Processor A SWAPs | Routing Overhead on A ($\Delta \text{CX}$) |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 1 | 8 | 4 | 0 | 11 | 1 | +3 CX (+37.5%) |
-| 2 | 16 | 8 | 0 | 25 | 3 | +9 CX (+56.3%) |
-| 4 | 32 | 16 | 0 | 53 | 7 | +21 CX (+65.6%) |
-| 6 | 48 | 24 | 0 | 81 | 11 | +33 CX (+68.8%) |
-| 8 | 64 | 32 | 0 | 109 | 15 | +45 CX (+70.3%) |
-| 16 | 128 | 64 | 0 | 221 | 31 | +93 CX (+72.7%) |
+| Step Count $n$ | Logical Bonds | Processor A (Tree, CX) | | | Processor B (Heavy-Hex, CX) | | | Processor D (2×3 Ladder, Native RZZ) | | |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| | **Ring Bonds** | **2Q Gates** | **SWAPs** | **Overhead** | **2Q Gates** | **SWAPs** | **Overhead** | **2Q Gates** | **SWAPs** | **Overhead** |
+| **1** | 4 | 11 CX | 1 | +3 CX (+37.5%) | 8 CX | **0** | 0 CX (0.0%) | **4 RZZ** | **0** | **0 (0.0%)** |
+| **2** | 8 | 25 CX | 3 | +9 CX (+56.3%) | 16 CX | **0** | 0 CX (0.0%) | **8 RZZ** | **0** | **0 (0.0%)** |
+| **4** | 16 | 53 CX | 7 | +21 CX (+65.6%) | 32 CX | **0** | 0 CX (0.0%) | **16 RZZ** | **0** | **0 (0.0%)** |
+| **6** | 24 | 81 CX | 11 | +33 CX (+68.8%) | 48 CX | **0** | 0 CX (0.0%) | **24 RZZ** | **0** | **0 (0.0%)** |
+| **8** | 32 | 109 CX | 15 | +45 CX (+70.3%) | 64 CX | **0** | 0 CX (0.0%) | **32 RZZ** | **0** | **0 (0.0%)** |
+| **16** | 64 | 221 CX | 31 | +93 CX (+72.7%) | 128 CX | **0** | 0 CX (0.0%) | **64 RZZ** | **0** | **0 (0.0%)** |
 
-### 6.2 Topological Routing Breakdown
+### 6.2 Rigorous Proof: Why Processor D Has Exactly Zero SWAPs (Layout Mapping $\pi$)
 
-1. **Native 4-Cycle Advantage (Processor D & B):**
-   Because the ring TFIM requires closed periodic interactions $(0,1), (1,2), (2,3), (3,0)$, processors embedding a native 4-cycle can place the 4 logical qubits directly onto physical hardware nodes with matching nearest-neighbor connectivity. Consequently, routing SWAPs are identically **zero** across all step counts. Furthermore, Processor D compiles each bond with 1 native RZZ gate instead of 2 CXs, halving physical two-qubit gate counts.
-2. **Linear Tree Penalty (Processor A):**
-   Processor A's coupling map is a tree graph. Embedding the ring forces the transpiler to route non-adjacent interactions via SWAPs. At step count $n=4$, Processor A has total depth 66 (vs 29 on D) and 2Q depth 37 (vs 8 on D). At $n=6$, Processor A incurs 11 SWAPs (33 extra CXs), yielding total depth 100 (vs 43 on D) and 2Q depth 57 (vs 12 on D), accelerating decoherence and entropy production.
+A common question when inspecting Processor D's edge set $\mathcal{E}_D = \{(0,1), (1,2), (3,4), (4,5), (0,3), (1,4), (2,5)\}$ is:
+> *The ring Hamiltonian requires bond $(2, 3)$, but the numerical edge $(2, 3)$ does not exist in `processor_D.json`. Is having 0 SWAPs a bug or error?*
+
+**The answer is mathematically NO.** In quantum compilation, logical qubits are not constrained to an identity mapping onto physical qubit indices ($q_i \neq P_i$). Instead, the Qiskit transpiler evaluates the hardware graph isomorphism and applies an optimal layout permutation $\pi$:
+
+$$\pi: \quad q_0 \mapsto P_0, \quad q_1 \mapsto P_1, \quad q_2 \mapsto P_4, \quad q_3 \mapsto P_3$$
+
+```
+   Logical Ring Topology                      Physical 2×3 Ladder (Processor D)
+          (q0) ----------- (q1)                     (P0) ----------- (P1) ----------- (P2)
+            |                |                        |   Active TFIM  |               |
+            |   Ring TFIM    |       ======>          |   4-Cycle Link |  Bypass Pair  |
+            |     Bonds      |       [ π ]            |   (0 SWAPs)    |               |
+          (q3) ----------- (q2)                     (P3) ----------- (P4) ----------- (P5)
+```
+
+Under this layout permutation $\pi$, every single logical bond maps directly onto an existing hardware coupling edge of distance $d=1$:
+1. **Bond $(q_0, q_1) \longrightarrow (P_0, P_1)$:** Directly connected by horizontal rail edge $(0, 1) \in \mathcal{E}_D$ (Distance = 1).
+2. **Bond $(q_1, q_2) \longrightarrow (P_1, P_4)$:** Directly connected by vertical rung edge $(1, 4) \in \mathcal{E}_D$ (Distance = 1).
+3. **Bond $(q_2, q_3) \longrightarrow (P_4, P_3)$:** Directly connected by horizontal rail edge $(3, 4) \in \mathcal{E}_D$ (Distance = 1).
+4. **Bond $(q_3, q_0) \longrightarrow (P_3, P_0)$:** Directly connected by vertical rung edge $(0, 3) \in \mathcal{E}_D$ (Distance = 1).
+
+Because the physical subgraph induced by $\{P_0, P_1, P_4, P_3\}$ forms a planar cycle $P_0 - P_1 - P_4 - P_3 - P_0$ of length 4, all interactions occur exclusively between immediate physical neighbors. The SABRE routing pass requires **strictly 0 SWAP gates** across all step counts $n \in [1, 16]$.
+
+### 6.3 Algorithmic Gate Reduction: Native RZZ vs. CX Compilation
+
+Furthermore, contrasting Processor D against Processor B clarifies why Processor D executes **50% fewer physical entangling gates** while both achieve 0 SWAPs:
+- **Processor B (Standard CX Basis):** The basis set is restricted to `["rz", "sx", "x", "cx"]`. Each $ZZ(\theta)$ interaction compiles via the standard synthesis:
+  $$R_{ZZ}(\theta) = \text{CX}(a, b) \cdot R_Z(b, \theta) \cdot \text{CX}(a, b) \implies \mathbf{2 \text{ CX gates per bond}}$$
+  With 4 bonds per step, Processor B executes $4 \times 2 = 8 \text{ CX gates}$ per step (48 CX at $n=6$, 56 CX at $n=7$).
+- **Processor D (Native RZZ Co-Design):** Section 6 rules explicitly allow `["rz", "sx", "x", "rzz"]`. In superconducting circuits with cross-resonance or flux-tunable couplers, $R_{ZZ}(\theta)$ is implemented as a single calibrated pulse:
+  $$R_{ZZ}(\theta) = \text{Native } R_{ZZ}(\theta) \implies \mathbf{1 \text{ RZZ gate per bond}}$$
+  With 4 bonds per step, Processor D executes $4 \times 1 = \mathbf{4 \text{ RZZ gates}}$ per step (24 RZZ at $n=6$, 32 RZZ at $n=8$).
+
+This algorithmic reduction eliminates half of the physical two-qubit noise channels per Trotter step. As demonstrated in §4, this allows the quantum simulation to run to deeper step counts ($n^* = 8$) before physical noise overtakes Trotter discretization gains, propelling peak fidelity to **$0.752817$** (outperforming Processor B by $+9.0$ percentage points and Processor A by $+17.5$ percentage points).
 
 ---
 

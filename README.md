@@ -167,6 +167,15 @@ $$e^{-i H \Delta t} \approx \left(\prod_{(i, j) \in \text{bonds}} e^{i J \Delta 
   - **Diameter:** 3 hops across opposite corners $(0, 5)$, saving 3 CX gates on far-pair entanglement ($7$ CXs vs $10$ CXs on B).
   - Formally validated by `tools/check_processor_d.py`.
 
+> [!TIP]
+> **Why Zero SWAPs is Mathematically Exact on Processor D:**  
+> Although numerical edge `(2, 3)` is absent from the raw edge list, the transpiler maps logical ring qubits $\{q_0, q_1, q_2, q_3\}$ onto hardware nodes via layout permutation $\pi = [P_0, P_1, P_4, P_3]$. Under $\pi$, all four TFIM bonds map to existing hardware couplings:
+> - Bond $(q_0, q_1) \to (P_0, P_1) \in \mathcal{E}_D$ (Distance 1)
+> - Bond $(q_1, q_2) \to (P_1, P_4) \in \mathcal{E}_D$ (Distance 1)
+> - Bond $(q_2, q_3) \to (P_4, P_3) \in \mathcal{E}_D$ (Distance 1)
+> - Bond $(q_3, q_0) \to (P_3, P_0) \in \mathcal{E}_D$ (Distance 1)  
+> Every bond is executed between directly adjacent qubits, guaranteeing **strictly 0 SWAP gates** across all step counts.
+
 ---
 
 ## 📈 Visual Experimental Findings
@@ -200,6 +209,15 @@ $$e^{-i H \Delta t} \approx \left(\prod_{(i, j) \in \text{bonds}} e^{i J \Delta 
 ### Two-Qubit Gate Scaling & Circuit Depth
 ![Figure 5: Gate Split & Depth](results/figures/fig5_gate_split_and_depth.png)
 *Figure 5: Circuit depth and physical two-qubit gate scaling. Processor A incurs heavy SWAP overhead (+33 CXs at $n=6$). Processor D with native RZZ executes only 4 physical two-qubit gates per step (50% fewer two-qubit gates and 50% shallower two-qubit depth than Processor B).*
+
+| Step Count $n$ | Logical Bonds | Processor A (Tree, CX) | Processor B (Hex, CX) | Processor D (2×3 Ladder, Native RZZ) |
+|:---:|:---:|:---:|:---:|:---:|
+| **$n=1$** | 4 | 11 CX (1 SWAP) | 8 CX (0 SWAPs) | **4 RZZ (0 SWAPs, -50% 2Q Gates)** |
+| **$n=2$** | 8 | 25 CX (3 SWAPs) | 16 CX (0 SWAPs) | **8 RZZ (0 SWAPs, -50% 2Q Gates)** |
+| **$n=4$** | 16 | 53 CX (7 SWAPs) | 32 CX (0 SWAPs) | **16 RZZ (0 SWAPs, -50% 2Q Gates)** |
+| **$n=6$** | 24 | 81 CX (11 SWAPs) | 48 CX (0 SWAPs) | **24 RZZ (0 SWAPs, -50% 2Q Gates)** |
+| **$n=8$ ($n^*$)** | 32 | 109 CX (15 SWAPs) | 64 CX (0 SWAPs) | **32 RZZ (0 SWAPs, -50% 2Q Gates)** |
+| **$n=16$** | 64 | 221 CX (31 SWAPs) | 128 CX (0 SWAPs) | **64 RZZ (0 SWAPs, -50% 2Q Gates)** |
 
 ---
 
