@@ -69,17 +69,17 @@
         description: "Official 9-qubit graph with one 4-cycle. Asymmetric node degree 5."
       },
       D: {
-        name: "Processor D (Custom 3x3 Grid - 9Q)",
-        type: "Co-Designed 3x3 Cartesian Grid (9 physical qubits)",
-        numPhysQubits: 9,
+        name: "Processor D (Custom 2x3 Ladder - 6Q)",
+        type: "Co-Designed 2x3 Ladder (6 physical qubits)",
+        numPhysQubits: 6,
         nativeBonds: [
-          [0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8],
-          [0, 3], [3, 6], [1, 4], [4, 7], [2, 5], [5, 8]
+          [0, 1], [1, 2], [3, 4], [4, 5],
+          [0, 3], [1, 4], [2, 5]
         ],
         sqErr: 0.001,
         twoQErr: 0.005,
         readoutErr: 0.01,
-        description: "StepWise-Q Co-Design: 9-qubit 3x3 grid with FOUR native 4-cycles. 0 SWAP routing overhead."
+        description: "StepWise-Q Co-Design: 6-qubit 2x3 ladder with TWO native 4-cycles. Max degree <= 3, diameter 3. 0 SWAP routing overhead."
       }
     };
 
@@ -194,12 +194,12 @@
           pos.push(new THREE.Vector3(0, 0, 0));
           return pos;
         } else {
-          // Processor D: 3x3 Cartesian Grid
-          const spacing = 3.0;
+          // Processor D: 2x3 Ladder Grid (6 Qubits)
+          const spacing = 3.5;
           const pos = [];
-          for (let r = 0; r < 3; r++) {
+          for (let r = 0; r < 2; r++) {
             for (let c = 0; c < 3; c++) {
-              pos.push(new THREE.Vector3((c - 1) * spacing, 0, (r - 1) * spacing));
+              pos.push(new THREE.Vector3((c - 1) * spacing, 0, (r - 0.5) * spacing));
             }
           }
           return pos;
