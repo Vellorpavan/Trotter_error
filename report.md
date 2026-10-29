@@ -336,19 +336,4 @@ The StepWise-Q investigation for QFF 2026 Phase 2 establishes clear, quantitativ
 3. **Hardware Co-Design Outperforms Pure Compilation:** Providing native cycles matching problem Hamiltonian symmetries eliminates routing SWAPs entirely, providing greater fidelity gains than transpiler optimization alone.
 4. **Error Mitigation is Highly Effective:** Polynomial ZNE combined with readout inversion recovers over $90\%$ of the signal lost to physical device attenuation.
 
----
-
-## 10. Self-Audit Against Hackathon Judging Rubric (100 Points)
-
-| Rubric Objective | Points | What Judges Look For | StepWise-Q Implementation & Evidence | Self-Score |
-|:---|:---:|:---|:---|:---:|
-| **1. Bell-state verification** | **10** | Correct bases ($XX, YY, ZZ$) and fidelity with binomial SE; sound physical reading of ideal vs noisy and near vs far pair. | Implemented via `bell_experiment()` with 4,096 shots/basis (12 circuits). Directly connected pair $(0, 1)$ achieves $F = 0.9633 \pm 0.0021$ ($1$ CX); diameter pair $(0, 8)$ achieves $F = 0.9420 \pm 0.0026$ ($10$ CXs via 3 SWAPs). Full 3–5 sentence physical analysis in §3.3. Documented in `results/tables/bell.csv` and Fig 2. | **10 / 10** |
-| **2. Processor D proposal** | **20** | Passes `tools/check_processor_d.py`; all four required items; design targets a measured bottleneck; honest trade-off. | 9-qubit 3×3 Cartesian grid with max degree 4 and four native 4-cycles. Eliminates 100% of routing SWAPs for ring TFIM. Justification is 187 words ($\ge 40$). Honest trade-off is Manhattan diameter 4. Exits with `OK` (code 0) on official checker. Documented in §2, `processors/processor_D.json`, and Fig 1. | **20 / 20** |
-| **3. Solution and benchmarking** | **35** | Correct model, conventions and references (10 pts); PS-specific quality items (15 pts); resource comparison on A/B/D (10 pts). | Ring TFIM ($N=4, J=1, g=1, T=2.0$) with exact benchmark $M_s = 0.652444$. Correct $n^* = 6$ (A) and $n^* = 7$ (B, D). Complete noise sweep on D ($0.5\times \to 8$, $1.0\times \to 7$, $2.0\times \to 6$). Two-qubit gate split into logical ($8n$) and routing SWAPs. Documented in §4–§6, `s3_scan.csv`, `s3_summary.csv`, `resources.csv`, and Figs 3, 4, 5. | **35 / 35** |
-| **4. Validation and reproducibility** | **15** | Runs end to end; required tables present and consistent; official settings used. | `main.ipynb` executes end-to-end in ~7s via `nbconvert` with 0 errors. Standalone `run_all.py` executes in ~4s. All 5 CSV tables match official schemas with zero NaN/missing values. All 14 automated unit tests pass in 0.008s. Zero locked values modified. | **15 / 15** |
-| **5. Analysis and report** | **20** | Explains results with evidence ($n^*$ crossover derivation); limitations; concrete next steps. | Mathematical derivation of $n^* \propto 1/\sqrt{\lambda}$ from BCH and depolarizing noise. 6 publication figures embedded with academic discussion. Thorough analysis of methodological limitations (§8.1) and concrete hardware deployment roadmap on IBM Quantum QPUs (§8.2). | **20 / 20** |
-| **Bonus: Error mitigation** | **+5** | Apply readout-error correction or ZNE to $M_s$ at $n^*$ on D; report raw, mitigated, and extra shots. | Implemented both Readout Inversion ($17.3\%$ reduction, 8,192 shots) and Richardson ZNE ($76.1\%$ reduction, 8,192 shots), plus Combined mitigation ($99.8\%$ recovery, 16,384 shots). Documented in §7, `mitigation.csv`, and Fig 6. | **+5 (Bonus)** |
-| **Deductions** | **0** | Missing required run ($-2$ each, up to $-10$); changed locked value (caps Obj 3 at half). | Zero missing runs. Zero changed locked values. | **0** |
-| **TOTAL SCORE** | **100** | **Total capped at 100 points.** | **Full marks across all 5 objectives + bonus.** | **100 / 100** |
-
 

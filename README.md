@@ -26,8 +26,7 @@
 [Bell Experiment](#-common-phase-2-bell-state-verification) •
 [Error Mitigation](#-bonus-quantum-error-mitigation) •
 [3D Simulation Lab](#-interactive-3d-quantum-simulation-laboratory) •
-[Quickstart](#-quickstart--reproduction-guide) •
-[Judging Rubric](#-judging-rubric-self-audit-100--100-points)
+[Quickstart](#-quickstart--reproduction-guide)
 
 </div>
 
@@ -475,21 +474,6 @@ jupyter nbconvert --to notebook --execute --inplace main.ipynb
 - **Pure Python Dependencies:** Only standard scientific libraries (`qiskit`, `qiskit-aer`, `numpy`, `scipy`, `matplotlib`) are required.
 - **Portability:** Pathing is dynamically relative via `os.path.dirname(os.path.abspath(__file__))`, running identically on macOS, Linux, and Windows/WSL2.
 - **Simulation Assumptions:** Evaluated under classical Markovian noise models. Physical QPUs exhibit non-Markovian noise, spectator cross-talk, and calibration drift.
-
----
-
-## ⚖️ Judging Rubric Self-Audit (100 / 100 Points)
-
-| Rubric Objective | Weight | What Judges Look For | StepWise-Q Deliverable & Evidence | Self-Score |
-|:---|:---:|:---|:---|:---:|
-| **1. Bell-State Verification** | **10 pts** | Correct bases ($XX, YY, ZZ$), fidelity with SE; sound reading of ideal vs noisy and near vs far pair. | Implemented via `bell_experiment()` with 4,096 shots/basis. Near pair $(0, 1)$ achieves $F = 0.9633 \pm 0.0021$; distant pair $(0, 8)$ achieves $F = 0.9420 \pm 0.0026$. 3–5 sentence physical analysis in `report.md` §3.3. Documented in `results/tables/bell.csv` and Fig 2. | **10 / 10** |
-| **2. Processor D Proposal** | **20 pts** | Passes checker; all 4 items; targets measured bottleneck; honest trade-off. | 9-qubit 3×3 Cartesian grid with max degree 4 and four native 4-cycles. 100% elimination of routing SWAPs for ring TFIM. Justification is 187 words ($\ge 40$). Honest trade-off is Manhattan diameter 4. Exits with `OK` (code 0) on official checker. Documented in `processors/processor_D.json`, `report.md` §2, and Fig 1. | **20 / 20** |
-| **3. Solution & Benchmarking** | **35 pts** | Correct model, conventions, references (10 pts); PS-specific quality (15 pts); resource comparison on A/B/D (10 pts). | Ring TFIM ($N=4, J=1, g=1, T=2.0$) with exact benchmark $M_s = 0.652444$. Correct $n^* = 6$ (A) and $n^* = 7$ (B, D). Complete noise sweep on D ($0.5\times \to 8$, $1.0\times \to 7$, $2.0\times \to 6$). Two-qubit gate split into logical ($8n$) and routing SWAPs. Documented in `s3_scan.csv`, `s3_summary.csv`, `resources.csv`, and Figs 3, 4, 5. | **35 / 35** |
-| **4. Validation & Reproducibility** | **15 pts** | Runs end to end; required tables present and consistent; official settings used. | `main.ipynb` executes end-to-end in ~7s with 0 errors. Standalone `run_all.py` executes in ~4s. All 5 CSV tables present with zero NaN/missing values. All 14 automated unit tests pass in 0.008s. Zero locked values modified. | **15 / 15** |
-| **5. Analysis & Report** | **20 pts** | Explains results with evidence ($n^*$ crossover); limitations; concrete next steps. | Mathematical derivation of $n^* \propto 1/\sqrt{\lambda}$ from BCH and gate noise. 6 publication figures embedded with academic discussion. Methodological limitations (§8.1) and physical IBM Quantum hardware roadmap (§8.2). | **20 / 20** |
-| **Bonus: Error Mitigation** | **+5 pts** | Apply readout-error correction or ZNE to $M_s$ at $n^*$ on D; report raw, mitigated, and extra shots. | Readout Inversion ($17.3\%$ reduction, 8,192 shots) and Richardson ZNE ($76.1\%$ reduction, 8,192 shots), plus Combined mitigation ($99.8\%$ recovery, 16,384 shots). Documented in `results/tables/mitigation.csv` and Fig 6. | **+5 (Bonus)** |
-| **Deductions** | **0 pts** | Missing required run ($-2$ each, up to $-10$); changed locked value (caps Obj 3 at half). | Zero missing runs. Zero changed locked values. | **0** |
-| **TOTAL SCORE** | **100 pts** | **Total score capped at 100 points.** | **Full marks across all 5 objectives + bonus.** | **100 / 100** |
 
 ---
 
