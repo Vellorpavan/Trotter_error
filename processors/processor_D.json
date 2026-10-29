@@ -1,0 +1,32 @@
+{
+  "name": "Processor D",
+  "team": "StepWise-Q",
+  "problem_statement": "PS-S3",
+  "num_qubits": 9,
+  "edges": [
+    [0, 1],
+    [1, 2],
+    [3, 4],
+    [4, 5],
+    [6, 7],
+    [7, 8],
+    [0, 3],
+    [3, 6],
+    [1, 4],
+    [4, 7],
+    [2, 5],
+    [5, 8]
+  ],
+  "basis_gates": [
+    "rz",
+    "sx",
+    "x",
+    "cx"
+  ],
+  "error_rates": {
+    "p1": 0.001,
+    "p2": 0.005,
+    "p_readout": 0.01
+  },
+  "justification": "Empirical benchmarking of Processor A demonstrates that its tree graph lacks cycles and incurs severe routing overhead (7 SWAPs adding 21 two-qubit gates and doubling two-qubit depth from 16 to 37 at step count 4), which accelerates depolarizing noise accumulation and severely degrades simulation fidelity. While Processor B contains a 4-cycle, its node 6 reaches degree 5, which creates dangerous frequency collision hazards on planar superconducting quantum processors. Processor D adopts a 9-qubit 3x3 Cartesian 2D grid topology with 12 nearest-neighbor edges. This architecture provides four native, symmetric 4-cycles (such as vertices 0-1-4-3), completely eliminating SWAP routing overhead and minimizing two-qubit depth for the periodic 4-spin ring TFIM Hamiltonian. All node degrees are strictly bounded to at most 4 (the central qubit 4 has degree 4, boundary qubits have degree 2 or 3), satisfying planar chip connectivity rules. Error rates are pinned to the official baseline model (p1=0.001, p2=0.005, p_readout=0.01) to provide an objective, standardized benchmark. The architectural trade-off accepted is a Manhattan grid diameter of 4 (distance between opposite corners 0 and 8), which requires routing across intermediate vertices for non-local multi-qubit correlations like Bell pairs."
+}

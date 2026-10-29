@@ -1,0 +1,10 @@
+QFF 2026 Phase 2 - Quantum Simulation track: START HERE
+
+1. Read the problem statement: QFF2026_Phase2_Simulation_Problem_Statements.docx
+2. Read the rules / locked inputs: QFF2026_Simulation_Challenge_Kit/README.md and data/instances_index.json
+3. Set up and self-test (do this at the Day 1, 5:15-5:40 PM check): QFF2026_Simulation_Challenge_Kit/README.md Setup section, then run starter/starter_sim.ipynb
+4. Judging: Judging section of the problem statement
+
+Continue with the SAME team and SAME problem statement as Phase 1.
+Deadline: public GitHub repository URL on the hackathon portal before 5:40 PM IST on Day 2. The commit at the deadline is judged.
+Questions: Simulation help desk at the venue, or qiskitfallfest@srmap.edu.in

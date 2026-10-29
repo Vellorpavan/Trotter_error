@@ -1,0 +1,4 @@
+method,ms_raw,ms_mitigated,extra_shots
+readout_error_mitigation,0.4390869140625,0.4760430087509743,8192
+zero_noise_extrapolation_richardson,0.4390869140625,0.6014404296875004,8192
+combined_zne_plus_readout,0.4390869140625,0.6520611354228668,16384

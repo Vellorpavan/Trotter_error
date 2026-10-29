@@ -1,0 +1,45 @@
+{
+ "meta": {
+  "model": "TFIM H = -J sum_i Z_i Z_{i+1} - g sum_i X_i",
+  "boundary": "ring (periodic): bonds (0,1),(1,2),(2,3),(3,0)",
+  "N": 4,
+  "J": 1.0,
+  "g": 1.0,
+  "initial_state": "Neel, Z_i = (-1)^i, Qiskit label '1010'",
+  "label_order": "Qiskit: qubit 0 is the right-most character"
+ },
+ "operator": [
+  [
+   "IIZZ",
+   -1.0
+  ],
+  [
+   "IZZI",
+   -1.0
+  ],
+  [
+   "ZZII",
+   -1.0
+  ],
+  [
+   "ZIIZ",
+   -1.0
+  ],
+  [
+   "IIIX",
+   -1.0
+  ],
+  [
+   "IIXI",
+   -1.0
+  ],
+  [
+   "IXII",
+   -1.0
+  ],
+  [
+   "XIII",
+   -1.0
+  ]
+ ]
+}
