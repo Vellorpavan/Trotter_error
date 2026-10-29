@@ -36,19 +36,6 @@
 
 ---
 
-## 📑 Technical Reports & Documentation
-
-All technical documentation and deliverables for both phases are accessible directly in this repository:
-
-| Deliverable | Location | Description |
-|:---|:---:|:---|
-| 📘 **Phase 2 Technical Report** | [**`report.md`**](report.md) | Official 8-page final paper: Bell-state verification, Processor D co-design, Trotter crossover derivations, and ZNE mitigation. |
-| 📗 **Phase 1 Technical Report** | [**`Phase_1/report.md`**](Phase_1/report.md) | Phase 1 scientific report: analytical error scaling laws, reference benchmarks, and convergence limits. |
-| 📕 **Phase 1 System Architecture** | [**`Phase_1/Architecture.md`**](Phase_1/Architecture.md) | Theoretical architecture specification and experimental framework documentation. |
-| 📑 **Phase 1 Architecture PDF** | [**`Phase_1/ARCHITECTURE.md.pdf`**](Phase_1/ARCHITECTURE.md.pdf) | Publication-formatted PDF of the Phase 1 architectural specifications. |
-| 📁 **Phase 1 Codebase & Tests** | [**`Phase_1/`**](Phase_1/) | Standalone Phase 1 repository root containing all original test suites, data, and notebooks. |
-
----
 
 ## 📊 Executive Dashboard & Key Results
 
