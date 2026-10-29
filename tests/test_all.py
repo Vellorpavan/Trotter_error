@@ -164,9 +164,9 @@ class TestPhysicsAndSimulation(unittest.TestCase):
         results = {(r["processor"], float(r["noise_scale"])): int(r["n_star"]) for r in rows}
         self.assertEqual(results[("A", 1.0)], 6, "Processor A optimal step must be 6")
         self.assertEqual(results[("B", 1.0)], 7, "Processor B optimal step must be 7")
-        self.assertEqual(results[("D", 1.0)], 7, "Processor D optimal step must be 7")
+        self.assertEqual(results[("D", 1.0)], 8, "Processor D (with native RZZ) optimal step must be 8")
         self.assertEqual(results[("D", 0.5)], 8, "Processor D at 0.5x noise optimal step must be 8")
-        self.assertEqual(results[("D", 2.0)], 6, "Processor D at 2.0x noise optimal step must be 6")
+        self.assertEqual(results[("D", 2.0)], 7, "Processor D at 2.0x noise optimal step must be 7")
 
     def test_processor_d_zero_swap_overhead(self):
         res_path = os.path.join(PROJECT_ROOT, "results", "tables", "resources.csv")

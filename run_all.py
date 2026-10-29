@@ -128,8 +128,8 @@ pure_trotter_fidelities = {}
 circuit_metrics_cache = {}
 
 for n in steps_list:
-    qc = trotter_circuit(4, 1.0, 1.0, 2.0, n, periodic=True)
-    psi_trotter = Statevector(qc)
+    qc_ideal = trotter_circuit(4, 1.0, 1.0, 2.0, n, periodic=True)
+    psi_trotter = Statevector(qc_ideal)
     pure_fid = float(state_fidelity(target_state, psi_trotter))
     pure_trotter_fidelities[n] = pure_fid
 
@@ -138,6 +138,8 @@ for n in steps_list:
                              (processor_D, "Processor D", 1.0)]:
         key = (p_label, n)
         if key not in circuit_metrics_cache:
+            zz_mode = "rzz" if "rzz" in proc.get("basis_gates", []) else "cx"
+            qc = trotter_circuit(4, 1.0, 1.0, 2.0, n, periodic=True, zz_mode=zz_mode)
             m = circuit_metrics(qc, proc)
             circuit_metrics_cache[key] = m
             resources_rows.append({
@@ -172,7 +174,8 @@ for proc, p_label, scale in scan_configs:
     print(f"Scanning {p_label} at scale {scale}x...")
 
     for n in steps_list:
-        qc = trotter_circuit(4, 1.0, 1.0, 2.0, n, periodic=True)
+        zz_mode = "rzz" if "rzz" in proc.get("basis_gates", []) else "cx"
+        qc = trotter_circuit(4, 1.0, 1.0, 2.0, n, periodic=True, zz_mode=zz_mode)
         m = circuit_metrics_cache[(p_label, n)]
 
         # Noisy density-matrix fidelity
@@ -223,7 +226,8 @@ print("=" * 70)
 # Dynamically extract n_star from s3_summary_rows for Processor D at 1.0x noise
 n_star = [r["n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 1.0][0]
 print(f"[5/6] Executing Bonus: Error Mitigation on Processor D at dynamically identified n* = {n_star}...")
-qc_star = trotter_circuit(4, 1.0, 1.0, 2.0, n_star, periodic=True)
+zz_mode_d = "rzz" if "rzz" in processor_D.get("basis_gates", []) else "cx"
+qc_star = trotter_circuit(4, 1.0, 1.0, 2.0, n_star, periodic=True, zz_mode=zz_mode_d)
 
 # 1. Raw baseline from scan (1x noise at n*)
 raw_row = [r for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 1.0 and r["steps"] == n_star][0]
@@ -399,7 +403,7 @@ plt.close()
 print(f"Saved: {fig2_path}")
 
 # --- Figure 3: Trotter Fidelity Crossover (Headline Deliverable) ---
-fig, ax = plt.subplots(figsize=(9, 5.5), dpi=300)
+fig, ax = plt.subplots(figsize=(9.5, 5.5), dpi=300)
 
 steps = np.array(steps_list)
 pure_fids = [pure_trotter_fidelities[n] for n in steps]
@@ -408,20 +412,31 @@ f_A = [r["fidelity_noisy"] for r in s3_scan_rows if r["processor"] == "A" and r[
 f_B = [r["fidelity_noisy"] for r in s3_scan_rows if r["processor"] == "B" and r["noise_scale"] == 1.0]
 f_D = [r["fidelity_noisy"] for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 1.0]
 
+n_star_A = [r["n_star"] for r in summary_rows if r["processor"] == "A" and r["noise_scale"] == 1.0][0]
+f_star_A = [r["fidelity_at_n_star"] for r in summary_rows if r["processor"] == "A" and r["noise_scale"] == 1.0][0]
+n_star_B = [r["n_star"] for r in summary_rows if r["processor"] == "B" and r["noise_scale"] == 1.0][0]
+f_star_B = [r["fidelity_at_n_star"] for r in summary_rows if r["processor"] == "B" and r["noise_scale"] == 1.0][0]
+n_star_D = [r["n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 1.0][0]
+f_star_D = [r["fidelity_at_n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 1.0][0]
+
 ax.plot(steps, pure_fids, "k--", lw=2, marker="o", label="Ideal Trotter (Noise-Free Algorithmic Error)")
-ax.plot(steps, f_A, color="#6929C4", lw=2.5, marker="s", ms=7, label="Processor A (1× Noise) — n* = 6, F = 0.577")
-ax.plot(steps, f_B, color="#0062FF", lw=2.5, marker="^", ms=7, label="Processor B (1× Noise) — n* = 7, F = 0.663")
-ax.plot(steps, f_D, color="#007D79", lw=2.5, marker="D", ms=7, label="Processor D (1× Noise) — n* = 7, F = 0.663")
+ax.plot(steps, f_A, color="#6929C4", lw=2.5, marker="s", ms=7, label=f"Processor A (1× Noise) — n* = {n_star_A}, F = {f_star_A:.3f}")
+ax.plot(steps, f_B, color="#0062FF", lw=2.5, marker="^", ms=7, label=f"Processor B (1× Noise) — n* = {n_star_B}, F = {f_star_B:.3f}")
+ax.plot(steps, f_D, color="#007D79", lw=2.5, marker="D", ms=7, label=f"Processor D (1× Noise, Native RZZ) — n* = {n_star_D}, F = {f_star_D:.3f}")
 
-ax.axvline(x=6, color="#6929C4", linestyle=":", alpha=0.6)
-ax.axvline(x=7, color="#007D79", linestyle=":", alpha=0.6)
+ax.axvline(x=n_star_A, color="#6929C4", linestyle=":", alpha=0.6)
+ax.axvline(x=n_star_B, color="#0062FF", linestyle=":", alpha=0.6)
+ax.axvline(x=n_star_D, color="#007D79", linestyle=":", alpha=0.6)
 
-ax.annotate("Processor A Peak\n(n* = 6)", xy=(6, f_A[steps_list.index(6)]), xytext=(3.5, 0.42),
+ax.annotate(f"Processor A Peak\n(n* = {n_star_A}, F = {f_star_A:.3f})", xy=(n_star_A, f_star_A), xytext=(3.2, 0.40),
             arrowprops=dict(facecolor="#6929C4", shrink=0.08, width=1.5, headwidth=6),
-            fontsize=10, weight="bold", color="#6929C4")
-ax.annotate("Processors B & D Peak\n(n* = 7)", xy=(7, f_D[steps_list.index(7)]), xytext=(8.5, 0.72),
+            fontsize=9.5, weight="bold", color="#6929C4")
+ax.annotate(f"Processor B Peak\n(n* = {n_star_B}, F = {f_star_B:.3f})", xy=(n_star_B, f_star_B), xytext=(4.3, 0.70),
+            arrowprops=dict(facecolor="#0062FF", shrink=0.08, width=1.5, headwidth=6),
+            fontsize=9.5, weight="bold", color="#0062FF")
+ax.annotate(f"Processor D Peak\n(n* = {n_star_D}, F = {f_star_D:.3f})", xy=(n_star_D, f_star_D), xytext=(9.2, 0.79),
             arrowprops=dict(facecolor="#007D79", shrink=0.08, width=1.5, headwidth=6),
-            fontsize=10, weight="bold", color="#007D79")
+            fontsize=9.5, weight="bold", color="#007D79")
 
 ax.set_xlabel("Trotter Step Count (n)")
 ax.set_ylabel("State Fidelity F(n)")
@@ -444,14 +459,21 @@ f_D_05 = [r["fidelity_noisy"] for r in s3_scan_rows if r["processor"] == "D" and
 f_D_10 = [r["fidelity_noisy"] for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 1.0]
 f_D_20 = [r["fidelity_noisy"] for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 2.0]
 
-ax.plot(steps, f_D_05, color="#198038", lw=2.5, marker="o", ms=7, label="Noise Scale 0.5× → n* = 8, F = 0.782")
-ax.plot(steps, f_D_10, color="#007D79", lw=2.5, marker="D", ms=7, label="Noise Scale 1.0× → n* = 7, F = 0.663")
-ax.plot(steps, f_D_20, color="#DA1E28", lw=2.5, marker="v", ms=7, label="Noise Scale 2.0× → n* = 6, F = 0.503")
+n_star_05 = [r["n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 0.5][0]
+f_star_05 = [r["fidelity_at_n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 0.5][0]
+n_star_10 = [r["n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 1.0][0]
+f_star_10 = [r["fidelity_at_n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 1.0][0]
+n_star_20 = [r["n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 2.0][0]
+f_star_20 = [r["fidelity_at_n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 2.0][0]
 
-ax.plot([8, 7, 6], [f_D_05[steps_list.index(8)], f_D_10[steps_list.index(7)], f_D_20[steps_list.index(6)]],
-        "k--", lw=1.5, zorder=4)
-ax.scatter([8, 7, 6], [f_D_05[steps_list.index(8)], f_D_10[steps_list.index(7)], f_D_20[steps_list.index(6)]],
-           color="gold", edgecolor="black", s=130, zorder=5)
+ax.plot(steps, f_D_05, color="#198038", lw=2.5, marker="o", ms=7, label=f"Noise Scale 0.5× → n* = {n_star_05}, F = {f_star_05:.3f}")
+ax.plot(steps, f_D_10, color="#007D79", lw=2.5, marker="D", ms=7, label=f"Noise Scale 1.0× → n* = {n_star_10}, F = {f_star_10:.3f}")
+ax.plot(steps, f_D_20, color="#DA1E28", lw=2.5, marker="v", ms=7, label=f"Noise Scale 2.0× → n* = {n_star_20}, F = {f_star_20:.3f}")
+
+peak_steps = [n_star_05, n_star_10, n_star_20]
+peak_fids = [f_star_05, f_star_10, f_star_20]
+ax.plot(peak_steps, peak_fids, "k--", lw=1.5, zorder=4)
+ax.scatter(peak_steps, peak_fids, color="gold", edgecolor="black", s=130, zorder=5)
 
 ax.set_xlabel("Trotter Step Count (n)")
 ax.set_ylabel("State Fidelity F(n)")
@@ -459,7 +481,7 @@ ax.set_title("Noise Sweep on Processor D: Leftward Shift of n* Under Increasing 
 ax.set_xticks(steps)
 ax.set_ylim(0.0, 0.95)
 ax.grid(True, linestyle="--", alpha=0.5)
-ax.legend(loc="upper right", framealpha=0.9)
+ax.legend(loc="lower right", framealpha=0.9)
 
 plt.tight_layout()
 fig4_path = os.path.join(FIGURES_DIR, "fig4_noise_sweep_shift.png")
@@ -474,14 +496,14 @@ two_q_A = [r["two_q"] for r in s3_scan_rows if r["processor"] == "A" and r["nois
 log_2q = [r["logical_2q"] for r in s3_scan_rows if r["processor"] == "A" and r["noise_scale"] == 1.0]
 two_q_D = [r["two_q"] for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 1.0]
 
-ax1.plot(steps, log_2q, "k--", lw=2, marker="o", label="Logical 2Q Gates (Algorithm Baseline)")
-ax1.plot(steps, two_q_D, color="#007D79", lw=2.5, marker="D", label="Processor D (0 Routing SWAPs, Overhead = 0)")
-ax1.plot(steps, two_q_A, color="#6929C4", lw=2.5, marker="s", label="Processor A (High Routing SWAP Overhead)")
+ax1.plot(steps, log_2q, "k--", lw=2, marker="o", label="Logical 2Q Gates (CX Basis Baseline)")
+ax1.plot(steps, two_q_D, color="#007D79", lw=2.5, marker="D", label="Processor D (Native RZZ: 50% Fewer 2Q Gates, 0 SWAPs)")
+ax1.plot(steps, two_q_A, color="#6929C4", lw=2.5, marker="s", label="Processor A (CX Basis + Heavy Routing SWAPs)")
 ax1.fill_between(steps, log_2q, two_q_A, color="#6929C4", alpha=0.15, label="Routing Overhead (SWAP CXs on A)")
 
 ax1.set_xlabel("Trotter Step Count (n)")
-ax1.set_ylabel("Two-Qubit (CX) Gates")
-ax1.set_title("(a) Gate Split: Logical vs Routing 2Q Gates")
+ax1.set_ylabel("Physical Two-Qubit Gates (CX / RZZ)")
+ax1.set_title("(a) Gate Split: Physical Two-Qubit Gate Count")
 ax1.set_xticks(steps)
 ax1.grid(True, linestyle="--", alpha=0.5)
 ax1.legend(loc="upper left")
@@ -489,7 +511,7 @@ ax1.legend(loc="upper left")
 depth_2q_A = [r["two_q_depth"] for r in resources_rows if r["processor"] == "A"]
 depth_2q_D = [r["two_q_depth"] for r in resources_rows if r["processor"] == "D"]
 
-ax2.plot(steps, depth_2q_D, color="#007D79", lw=2.5, marker="D", label="Processor D (Minimal 2Q Depth)")
+ax2.plot(steps, depth_2q_D, color="#007D79", lw=2.5, marker="D", label="Processor D (Native RZZ: Minimal 2Q Depth)")
 ax2.plot(steps, depth_2q_A, color="#6929C4", lw=2.5, marker="s", label="Processor A (SWAP Congestion Depth)")
 
 ax2.set_xlabel("Trotter Step Count (n)")

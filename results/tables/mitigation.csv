@@ -1,3 +1,3 @@
 method,ms_raw,ms_mitigated,extra_shots
-readout_error_mitigation,0.4288330078125,0.4375847018494898,8192
-zero_noise_extrapolation_richardson,0.4288330078125,0.6204833984375003,8192
+readout_error_mitigation,0.494873046875,0.5049724968112245,8192
+zero_noise_extrapolation_richardson,0.494873046875,0.6223958333333335,8192

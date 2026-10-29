@@ -79,12 +79,14 @@ flowchart LR
 |:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Processor A** | 5-Qubit Tree (Diameter 3) | $1.0\times$ | **6** | **0.577419** | 0.864191 | 0.286772 | 81 (48L + 33S) | 11 SWAPs |
 | **Processor B** | 9-Qubit Heavy-Hex | $1.0\times$ | **7** | **0.662816** | 0.914448 | 0.251632 | 56 (56L + 0S) | **0 SWAPs** |
-| **Processor D** *(Ours)* | **6-Qubit 2×3 Ladder** | **$0.5\times$** | **8** | **0.782118** | 0.941669 | 0.159551 | 64 (64L + 0S) | **0 SWAPs** |
-| **Processor D** *(Ours)* | **6-Qubit 2×3 Ladder** | **$1.0\times$** | **7** | **0.662816** | 0.914448 | 0.251632 | 56 (56L + 0S) | **0 SWAPs** |
-| **Processor D** *(Ours)* | **6-Qubit 2×3 Ladder** | **$2.0\times$** | **6** | **0.503076** | 0.864191 | 0.361115 | 48 (48L + 0S) | **0 SWAPs** |
+| **Processor D** *(Ours)* | **6-Qubit 2×3 Ladder (RZZ)** | **$0.5\times$** | **8** | **0.841453** | 0.941669 | 0.100216 | 32 RZZ (32L + 0S) | **0 SWAPs** |
+| **Processor D** *(Ours)* | **6-Qubit 2×3 Ladder (RZZ)** | **$1.0\times$** | **8** | **0.752817** | 0.941669 | 0.188852 | 32 RZZ (32L + 0S) | **0 SWAPs** |
+| **Processor D** *(Ours)* | **6-Qubit 2×3 Ladder (RZZ)** | **$2.0\times$** | **7** | **0.620712** | 0.914448 | 0.293736 | 28 RZZ (28L + 0S) | **0 SWAPs** |
 
 > [!NOTE]  
-> **Simulation Scope:** All calculations represent high-fidelity classical simulations via `qiskit-aer` using full density-matrix integration for gate noise and 4,096-shot Monte Carlo sampling for measurement statistics under the official QFF 2026 noise model. S3 metrics on Processor D tie Processor B by construction because any native 4-cycle eliminates all routing SWAPs; Processor D's decisive architectural advantages are its bounded degree $\le 3$ (eliminating Processor B's degree-5 crosstalk hub) and shorter diameter of 3 (requiring only 7 CXs for far-pair entanglement vs. 10 CXs on B).
+> **Processor D Dual Co-Design Innovation:** Processor D combines two hardware co-design features to substantially outperform standard baseline architectures:
+> 1. **6-Qubit $2 \times 3$ Ladder Topology:** Bounded degree $\le 3$ (eliminating Processor B's degree-5 crosstalk hub), diameter 3 (saving 3 CXs on far-pair entanglement), and two native 4-cycles eliminating 100% of routing SWAPs for the periodic TFIM ring.
+> 2. **Native $R_{ZZ}$ Basis Gates:** With basis gates `["rz", "sx", "x", "rzz"]` (fully compliant with Section 6 rules), each bond evolution compiles into a single native $R_{ZZ}(\theta)$ pulse instead of the 2-CX decomposition (`cx -> rz -> cx`). This cuts two-qubit entangling operations per Trotter step from 8 CX to 4 RZZ gates, halving physical two-qubit noise. As a result, Processor D unlocks deeper optimal depth ($n^* = 8$) and reaches a peak state fidelity of **$0.752817$**, outperforming Processor B ($0.662816$) by **$+9.0$ percentage points** ($+13.6\%$ relative gain) and Processor A ($0.577419$) by **$+17.5$ percentage points**!
 
 ---
 
@@ -185,25 +187,25 @@ $$e^{-i H \Delta t} \approx \left(\prod_{(i, j) \in \text{bonds}} e^{i J \Delta 
 
 ### PS-S3 Trotter Fidelity Crossover
 ![Figure 3: Trotter Fidelity Crossover](results/figures/fig3_trotter_fidelity_crossover.png)
-*Figure 3: Noisy state fidelity vs Trotter step count $n \in [1, 12]$. At small $n$, Trotter error dominates; at large $n$, gate decoherence dominates. The optimum balances both at $n^* = 6$ (A) and $n^* = 7$ (B & D).*
+*Figure 3: Noisy state fidelity vs Trotter step count $n \in [1, 16]$. At small $n$, Trotter error dominates; at large $n$, gate decoherence dominates. The optimum balances both at $n^* = 6$ (Processor A, $F = 0.577$), $n^* = 7$ (Processor B, $F = 0.663$), and $n^* = 8$ (Processor D with native RZZ, $F = 0.753$).*
 
 ---
 
 ### Noise Sweep Shift on Processor D
 ![Figure 4: Noise Sweep Shift](results/figures/fig4_noise_sweep_shift.png)
-*Figure 4: Response of optimal step count $n^*$ to physical noise scale on Processor D. As noise increases from $0.5\times \to 1.0\times \to 2.0\times$, the optimal step count shifts monotonically downward ($n^* = 8 \to 7 \to 6$).*
+*Figure 4: Response of optimal step count $n^*$ to physical noise scale on Processor D. As noise increases from $0.5\times \to 1.0\times \to 2.0\times$, the optimal step count shifts leftward from $n^* = 8$ ($F = 0.841$) to $n^* = 8$ ($F = 0.753$) to $n^* = 7$ ($F = 0.621$).*
 
 ---
 
 ### Two-Qubit Gate Scaling & Circuit Depth
 ![Figure 5: Gate Split & Depth](results/figures/fig5_gate_split_and_depth.png)
-*Figure 5: Circuit depth and two-qubit gate breakdown. Processor A incurs severe SWAP routing penalties (+33 CXs at $n=6$), whereas Processors B and D scale cleanly at the theoretical lower bound ($8n$ CNOTs).*
+*Figure 5: Circuit depth and physical two-qubit gate scaling. Processor A incurs heavy SWAP overhead (+33 CXs at $n=6$). Processor D with native RZZ executes only 4 physical two-qubit gates per step (50% fewer two-qubit gates and 50% shallower two-qubit depth than Processor B).*
 
 ---
 
 ### Staggered Magnetization & Error Mitigation
 ![Figure 6: Magnetization & Mitigation](results/figures/fig6_magnetization_and_mitigation.png)
-*Figure 6: Staggered magnetization $M_s(T=2.0)$ dynamics. Richardson Zero-Noise Extrapolation recovers $85.7\%$ of the error with 8,192 calibration shots, bringing $M_s$ within $1\sigma$ of the exact reference ($0.652444$).*
+*Figure 6: Staggered magnetization $M_s(T=2.0)$ dynamics. Richardson Zero-Noise Extrapolation recovers 80.9% of the bias at $n^*=8$ with 8,192 calibration shots, bringing $M_s$ within $1\sigma$ of the exact reference ($0.652444$).*
 
 </div>
 
@@ -222,9 +224,9 @@ Each expectation value is sampled with **4,096 shots** per basis. Standard error
 | Qubit Pair | Distance ($d$) | Entangling Gates | Condition | $\langle XX \rangle$ | $\langle YY \rangle$ | $\langle ZZ \rangle$ | State Fidelity ($F$) |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **$(0, 1)$** | 1 hop | 1 CX | **Ideal** | $+1.0000 \pm 0.0000$ | $-1.0000 \pm 0.0000$ | $+1.0000 \pm 0.0000$ | **$1.0000 \pm 0.0000$** |
-| **$(0, 1)$** | 1 hop | 1 CX | **Noisy** | $+0.9458 \pm 0.0051$ | $-0.9521 \pm 0.0048$ | $+0.9551 \pm 0.0046$ | **$0.9633 \pm 0.0021$** |
+| **$(0, 1)$** | 1 hop | 1 CX | **Noisy** | $+0.9463 \pm 0.0051$ | $-0.9468 \pm 0.0050$ | $+0.9463 \pm 0.0051$ | **$0.9598 \pm 0.0022$** |
 | **$(0, 5)$** | 3 hops | 7 CX (2 SWAP) | **Ideal** | $+1.0000 \pm 0.0000$ | $-1.0000 \pm 0.0000$ | $+1.0000 \pm 0.0000$ | **$1.0000 \pm 0.0000$** |
-| **$(0, 5)$** | 3 hops | 7 CX (2 SWAP) | **Noisy** | $+0.9302 \pm 0.0057$ | $-0.9199 \pm 0.0061$ | $+0.9385 \pm 0.0054$ | **$0.9471 \pm 0.0025$** |
+| **$(0, 5)$** | 3 hops | 7 CX (2 SWAP) | **Noisy** | $+0.9253 \pm 0.0059$ | $-0.9033 \pm 0.0067$ | $+0.9248 \pm 0.0059$ | **$0.9384 \pm 0.0027$** |
 
 > [!NOTE]
 > **Dominant Readout Loss on Adjacent Pair:** On directly connected pair $(0, 1)$, single-qubit readout error $p_{\text{ro}} = 0.01$ attenuates two-qubit parity by $(1 - 2 p_{\text{ro}})^2 = (0.98)^2 = 0.9604$, yielding $F_{\text{readout}} \approx 0.9703$. This accounts for $\sim 74\%$ of total fidelity loss, proving readout attenuation, rather than CX gate noise ($p_2 = 0.005$), is the dominant physical loss on adjacent transmon qubits.
@@ -233,14 +235,14 @@ Each expectation value is sampled with **4,096 shots** per basis. Standard error
 
 ## 🛡️ Bonus: Quantum Error Mitigation
 
-At optimal operating point $n^* = 7$ on Processor D, physical noise depresses raw magnetization from $0.652444 \to 0.428833 \pm 0.010605$. We apply two mathematically rigorous mitigation techniques:
+At optimal operating point $n^* = 8$ on Processor D, physical noise depresses raw magnetization from $0.652444 \to 0.494873 \pm 0.010522$. We apply two mathematically rigorous mitigation techniques:
 
 1. **Readout Error Inversion (Single-Qubit Channel Inversion):**
-   Because $M_s = \frac{1}{4} \sum_{i=0}^{3} (-1)^i \langle Z_i \rangle$ is a sum of single-qubit observables, expectation values attenuate linearly by $1 - 2 p_{\text{ro}} = 0.98$. Inverting this channel yields $M_s^{\text{RO}} = 0.437585 \pm 0.010822$ (8,192 calibration shots).
+   Because $M_s = \frac{1}{4} \sum_{i=0}^{3} (-1)^i \langle Z_i \rangle$ is a sum of single-qubit observables, expectation values attenuate linearly by $1 - 2 p_{\text{ro}} = 0.98$. Inverting this channel yields $M_s^{\text{RO}} = 0.504972 \pm 0.010737$ (8,192 calibration shots).
 2. **Zero-Noise Extrapolation (Richardson Polynomial):**
    Evaluating $M_s(\lambda)$ across noise scales $\lambda \in \{0.5, 1.0, 2.0\}$ and extrapolating to $\lambda \to 0$ via Lagrange polynomial weights yields:
    
-   $$M_s^{\text{ZNE}} = \frac{8}{3} M_s(0.5) - 2 M_s(1.0) + \frac{1}{3} M_s(2.0) = \mathbf{0.620483 \pm 0.035246} \quad (\mathbf{85.7\% \text{ Error Reduction}}, 8,192\text{ shots})$$
+   $$M_s^{\text{ZNE}} = \frac{8}{3} M_s(0.5) - 2 M_s(1.0) + \frac{1}{3} M_s(2.0) = \mathbf{0.622396 \pm 0.035172} \quad (\mathbf{80.9\% \text{ Error Reduction}}, 8,192\text{ shots})$$
 
    *(Note: Because ZNE scales all physical error channels simultaneously, including readout error, applying readout inversion on top would double-count. Reporting ZNE independently ensures rigorous, publication-grade scientific validity).*
 
@@ -248,9 +250,9 @@ At optimal operating point $n^* = 7$ on Processor D, physical noise depresses ra
 
 | Mitigation Method | Extra Shots | Raw $M_s \pm \text{SE}$ | Mitigated $M_s \pm \text{SE}$ | Target $M_s^{\text{exact}}$ | Absolute Error $|\Delta M_s|$ | Error Reduction (%) |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Baseline (Noisy $1.0\times$)** | 0 | $0.428833 \pm 0.010605$ | — | $0.652444$ | $0.223611$ | $0.0\%$ (Reference) |
-| **Readout Error Inversion** | 8,192 | $0.428833 \pm 0.010605$ | $0.437585 \pm 0.010822$ | $0.652444$ | $0.214859$ | **3.9%** |
-| **Richardson ZNE** | 8,192 | $0.428833 \pm 0.010605$ | **$0.620483 \pm 0.035246$** | $0.652444$ | **0.031961** | **85.7%** |
+| **Baseline (Noisy $1.0\times$)** | 0 | $0.494873 \pm 0.010522$ | — | $0.652444$ | $0.157571$ | $0.0\%$ (Reference) |
+| **Readout Error Inversion** | 8,192 | $0.494873 \pm 0.010522$ | $0.504972 \pm 0.010737$ | $0.652444$ | $0.147472$ | **6.4%** |
+| **Richardson ZNE** | 8,192 | $0.494873 \pm 0.010522$ | **$0.622396 \pm 0.035172$** | $0.652444$ | **0.030049** | **80.9%** |
 
 ---
 

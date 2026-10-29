@@ -37,9 +37,9 @@ In digital quantum simulation (DQS) of continuous Hamiltonian dynamics, time evo
 
 Focusing on Problem Statement PS-S3 (4-spin periodic Ring Transverse-Field Ising Model, J=1.0, g=1.0, T=2.0, initial Neel state |1010>), StepWise-Q demonstrates that processor coupling topology directly dictates simulation accuracy. On Processor A (5-qubit tree), the absence of cycles forces dynamic SWAP routing (+33 CX gates at n=6, an overhead of +68.8%), prematurely capping peak fidelity at F = 0.5774 (n* = 6). 
 
-To overcome this, we co-designed Processor D: a 6-qubit 2x3 ladder architecture (edges: (0,1), (1,2), (3,4), (4,5), (0,3), (1,4), (2,5)) satisfying all competition design constraints (node count <= 12, max degree <= 3, diameter 3). Processor D natively embeds two 4-cycles, eliminating 100% of ring routing SWAPs and boosting peak fidelity to F = 0.6628 (n* = 7). Bounding the degree to <= 3 completely avoids the high-degree (degree 5) frequency-crowding crosstalk hub found in Processor B, while the diameter of 3 allows far-pair Bell state generation in only 7 CX gates (vs 10 CX on 9-qubit grids).
+To overcome this, we co-designed Processor D: a 6-qubit 2x3 ladder architecture (edges: (0,1), (1,2), (3,4), (4,5), (0,3), (1,4), (2,5)) featuring native RZZ basis gates (["rz", "sx", "x", "rzz"]) satisfying all competition design constraints (node count <= 12, max degree <= 3, diameter 3). Processor D natively embeds two 4-cycles, eliminating 100% of ring routing SWAPs, while its native RZZ pulses compile each ZZ interaction directly, cutting two-qubit entangling gates per step from 8 CX to 4 RZZ. This cuts entangling gate noise in half, unlocking deeper optimal depth (n* = 8) and boosting peak state fidelity to F = 0.7528 (beating Processor B by +9.0 percentage points and Processor A by +17.5 percentage points). Bounding the degree to <= 3 completely avoids the high-degree (degree 5) frequency-crowding crosstalk hub found in Processor B, while the diameter of 3 allows far-pair Bell state generation in only 7 CX gates (vs 10 CX on 9-qubit grids).
 
-Finally, we address observable fidelity degradation at n* = 7. We prove that staggered magnetization Ms is a linear combination of single-qubit Z observables, meaning readout attenuation scales as (1 - 2*p_ro) = 0.98 (rather than the invalid (0.98)^4 product). Applying 2nd-order Richardson Zero-Noise Extrapolation (ZNE) across noise scales lambda in {0.5, 1.0, 2.0} recovers 85.7% of the lost physical signal toward the exact reference (Ms = 0.652444), bringing the mitigated value (Ms = 0.6205 +/- 0.0352) within 1 sigma. All benchmarks execute end-to-end in under 5 seconds (well within the 30-minute limit) and are verified by a 14-test suite and a live 3D WebGL laboratory.
+Finally, we address observable fidelity degradation at n* = 8. We prove that staggered magnetization Ms is a linear combination of single-qubit Z observables, meaning readout attenuation scales as (1 - 2*p_ro) = 0.98 (rather than the invalid (0.98)^4 product). Applying 2nd-order Richardson Zero-Noise Extrapolation (ZNE) across noise scales lambda in {0.5, 1.0, 2.0} recovers 80.9% of the lost physical signal toward the exact reference (Ms = 0.652444), bringing the mitigated value (Ms = 0.6224 +/- 0.0352) within 1 sigma. All benchmarks execute end-to-end in under 5 seconds (well within the 30-minute limit) and are verified by a 14-test suite and a live 3D WebGL laboratory.
 ```
 
 ---
@@ -51,15 +51,15 @@ Finally, we address observable fidelity degradation at n* = 7. We prove that sta
 | **Physical Qubits** | 5 qubits | 9 qubits | **6 qubits** | Compact planar footprint |
 | **Max Vertex Degree** | 3 (node 1) | 5 (node 6) | **3 (nodes 1, 4)** | Eliminates parasitic $ZZ$ crosstalk |
 | **Graph Diameter** | 3 hops | 4 hops | **3 hops** | 7 CX far-pair Bell generation |
-| **Optimal Step Count ($n^*$)** | **$n^* = 6$** | **$n^* = 7$** | **$n^* = 7$** | Co-design enables deeper Trotter circuits |
-| **Peak State Fidelity $F(n^*)$** | $0.577419$ | $0.662816$ | **$0.662816$** | **$+14.8\%$ relative fidelity gain** vs A |
-| **Two-Qubit Gates at $n=6$** | 81 CX (48L + 33S) | 48 CX (48L + 0S) | **48 CX** (48L + 0S) | **$-40.7\%$ fewer entangling gates** |
+| **Optimal Step Count ($n^*$)** | **$n^* = 6$** | **$n^* = 7$** | **$n^* = 8$** | Co-design enables deeper Trotter circuits |
+| **Peak State Fidelity $F(n^*)$** | $0.577419$ | $0.662816$ | **$0.752817$** | **$+13.6\%$ relative gain** vs B (**$+30.4\%$** vs A) |
+| **Two-Qubit Gates at $n=6$** | 81 CX (48L + 33S) | 48 CX (48L + 0S) | **24 RZZ** (24L + 0S) | **$-70.4\%$ fewer entangling gates** vs A ($-50\%$ vs B) |
 | **Routing SWAP Overhead** | 11 SWAPs | **0 SWAPs** | **0 SWAPs** | 100% elimination of routing gates |
-| **Circuit Depth at $n=4$** | 66 layers | 45 layers | **45 layers** | **$-31.8\%$ circuit depth reduction** |
-| **Bell Pair Fidelity (Near: 1 hop)** | — | — | **$0.9633 \pm 0.0021$** (1 CX) | Readout is dominant loss ($F_{\text{ro}} \approx 0.970$) |
-| **Bell Pair Fidelity (Far: 3 hops)** | — | — | **$0.9471 \pm 0.0025$** (7 CX) | Matches $1 + 3(d-1)$ compilation |
-| **Raw Magnetization $M_s(n^*)$** | $0.3698 \pm 0.0104$ | $0.4409 \pm 0.0105$ | **$0.4288 \pm 0.0106$** | Target $M_s^{\text{exact}} = 0.652444$ |
-| **ZNE Mitigated $M_s$** | — | — | **$0.6205 \pm 0.0352$** | **$85.7\%$ observable error recovery** |
+| **Circuit Depth at $n=4$** | 66 layers | 45 layers | **29 layers** | **$-56.1\%$ circuit depth reduction** vs A |
+| **Bell Pair Fidelity (Near: 1 hop)** | — | — | **$0.9598 \pm 0.0022$** (1 CX) | Readout is dominant loss ($F_{\text{ro}} \approx 0.970$) |
+| **Bell Pair Fidelity (Far: 3 hops)** | — | — | **$0.9384 \pm 0.0027$** (7 CX) | Matches $1 + 3(d-1)$ compilation |
+| **Raw Magnetization $M_s(n^*)$** | $0.3698 \pm 0.0104$ | $0.4409 \pm 0.0105$ | **$0.4949 \pm 0.0105$** | Target $M_s^{\text{exact}} = 0.652444$ |
+| **ZNE Mitigated $M_s$** | — | — | **$0.6224 \pm 0.0352$** | **$80.9\%$ observable error recovery** |
 
 ---
 
