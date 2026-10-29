@@ -37,25 +37,6 @@
 
 ---
 
-> [!WARNING]  
-> **Phase 1 Historical Archive Notice:** The [`Phase_1/`](Phase_1/) directory is an immutable historical benchmark archive preserved from Phase 1. It was developed against Qiskit 2.6.1 and is preserved for provenance. Do not execute scripts or notebooks inside `Phase_1/` directly with the Phase 2 environment. Phase 2 strictly uses the locked official QFF 2026 Phase 2 environment (`qiskit==1.4.6`, `qiskit-aer==0.18.0`). All active reproduction commands (`run_all.py`, `main.ipynb`, `tests/test_all.py`) run at the repository root.
-
----
-
-## 📑 Technical Reports & Documentation
-
-All technical documentation and deliverables for both phases are accessible directly in this repository:
-
-| Deliverable | Location | Description |
-|:---|:---:|:---|
-| 📘 **Phase 2 Technical Report** | [**`report.md`**](report.md) | Official final paper: Bell verification, Processor D 2×3 ladder co-design, Trotter crossover derivations, and ZNE mitigation. |
-| 📗 **Phase 1 Technical Report** | [**`Phase_1/report.md`**](Phase_1/report.md) | Phase 1 scientific report: analytical error scaling laws, reference benchmarks, and convergence limits (Archive). |
-| 📕 **Phase 1 System Architecture** | [**`Phase_1/Architecture.md`**](Phase_1/Architecture.md) | Theoretical architecture specification and experimental framework documentation (Archive). |
-| 📑 **Phase 1 Architecture PDF** | [**`Phase_1/ARCHITECTURE.md.pdf`**](Phase_1/ARCHITECTURE.md.pdf) | Publication-formatted PDF of the Phase 1 architectural specifications (Archive). |
-| 📁 **Phase 1 Codebase & Tests** | [**`Phase_1/`**](Phase_1/) | Standalone Phase 1 repository root containing original test suites, data, and notebooks (Qiskit 2.6.1 Archive). |
-
----
-
 ## 📊 Executive Dashboard & Key Results
 
 In digital quantum simulation (DQS) of continuous Hamiltonian dynamics, time evolution $e^{-i H T}$ is discretized into $n$ discrete Trotter steps. On noisy intermediate-scale quantum (NISQ) devices, this creates a fundamental **physical crossover**:
