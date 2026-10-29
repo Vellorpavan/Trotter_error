@@ -282,9 +282,13 @@ At optimal operating point $n^* = 7$ on Processor D, physical noise depresses ra
 
 To complement our static benchmarking figures, StepWise-Q includes a **hardware-accelerated 3D WebGL laboratory** built with **Three.js** and **React**. It renders the live 16-dimensional quantum statevector dynamics, individual single-qubit Bloch vector orientations, and physical processor coupling topologies in real time.
 
-> [!NOTE]
-> **Why the 3D canvas is launched in a browser rather than executing inline in this README:**
-> GitHub Markdown automatically strips `<script>`, `<canvas>`, and `<iframe>` tags from `.md` files for platform security (preventing XSS attacks). Therefore, interactive WebGL runtimes cannot execute *directly inside* static GitHub Markdown pages. We provide both a **live zero-install online deployment** on GitHub Pages and a **1-click local launch** using the exact React + Three.js code!
+<div align="center">
+  <iframe src="https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4" width="100%" height="600" frameborder="0" allowfullscreen style="border-radius: 8px; border: 1px solid #334155; max-width: 100%; margin-bottom: 12px;"></iframe>
+  <br/>
+  <a href="https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4" target="_blank">
+    <img src="https://img.shields.io/badge/Launch_3D_Quantum_Lab-Open_in_New_Tab-00E5FF?style=for-the-badge&logo=google&logoColor=black" alt="Launch 3D Quantum Lab" />
+  </a>
+</div>
 
 ```
 +-----------------------------------------------------------------------------------------+
@@ -309,23 +313,27 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
 
 ### 🚀 How to Launch the 3D Simulation
 
-- **Option 1 (Instant Online Demo — Zero Install):**
-  Click below to open the deployed WebGL laboratory directly in your browser:
+- **Option 1 (Interactive Cloud / Embedded View):**
+  Open the interactive simulation directly in full screen:
+  👉 **[Interactive 3D Quantum Simulation Lab](https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4)**
+
+- **Option 2 (GitHub Pages Live Deployment):**
+  Explore the deployed zero-install WebGL lab:
   👉 **[https://vellorpavan.github.io/Trotter_error/](https://vellorpavan.github.io/Trotter_error/)**
 
-- **Option 2 (1-Click Local Browser Launch):**
+- **Option 3 (1-Click Local Browser Launch):**
   ```bash
   open visualization/index.html
   ```
   *(Or double-click `visualization/index.html` in macOS Finder / Windows Explorer).*
 
-- **Option 3 (Local HTTP Server):**
+- **Option 4 (Local HTTP Server):**
   ```bash
   python -m http.server 8000 --directory visualization
   # Open http://localhost:8000 in your browser
   ```
 
-- **Option 4 (React/Vite Component Source):**
+- **Option 5 (React/Vite Component Source):**
   The modular React JSX component source is stored in [`src/Interactive3DSimulation.jsx`](src/Interactive3DSimulation.jsx) for integration into React, Vite, or Next.js applications.
 
 ---
@@ -363,40 +371,6 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
     ├── main.ipynb                 # Phase 1 executable notebook
     ├── results/                   # Phase 1 benchmark tables & figures
     └── tests/                     # Phase 1 test suite (8 test suites)
-```
-
-> [!TIP]
-> **Accessing Complete Phase 1 Git History:**
-> The complete 11-commit Git history of Phase 1 is permanently preserved on the **[`phase1` branch](https://github.com/Vellorpavan/Trotter_error/tree/phase1)**:
-> ```bash
-> git fetch origin phase1 && git checkout phase1
-> ```
-│   └── processor_D.json           # 9-qubit 3x3 grid custom processor configuration
-├── results/
-│   ├── figures/                   # 300-DPI publication figures
-│   │   ├── fig1_processor_topologies.png
-│   │   ├── fig2_bell_state_fidelity.png
-│   │   ├── fig3_trotter_fidelity_crossover.png
-│   │   ├── fig4_noise_sweep_shift.png
-│   │   ├── fig5_gate_split_and_depth.png
-│   │   └── fig6_magnetization_and_mitigation.png
-│   └── tables/                    # Standardized CSV output tables
-│       ├── bell.csv               # Bell-state parity & fidelity measurements (4 rows)
-│       ├── resources.csv          # Circuit depth & two-qubit gate breakdown (36 rows)
-│       ├── s3_scan.csv            # Full step sweep across A, B, D and noise scales (60 rows)
-│       ├── s3_summary.csv         # Summary of optimal step counts & fidelities (5 rows)
-│       └── mitigation.csv         # Readout and ZNE mitigation performance metrics (3 rows)
-├── starter/
-│   ├── KIT_README.md              # Original challenge-kit README (matches MANIFEST.sha256)
-│   ├── processor_D_template.json  # Official architectural design rules
-│   ├── qff_sim.py                 # Source reference for qff_sim
-│   └── starter_sim.ipynb          # Original unpopulated starter notebook
-├── templates/
-│   └── results_columns.md         # Official table schema specifications
-├── tests/
-│   └── test_all.py                # Automated 14-test verification suite
-└── tools/
-    └── check_processor_d.py       # Official Processor D architectural rule checker
 ```
 
 ---
