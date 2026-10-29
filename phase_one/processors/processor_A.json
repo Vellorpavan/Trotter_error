@@ -1,0 +1,78 @@
+{
+  "name": "A_star",
+  "n_qubits": 5,
+  "coupling_map": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      3
+    ]
+  ],
+  "basis_gates": [
+    "rz",
+    "sx",
+    "x",
+    "cx"
+  ],
+  "noise": {
+    "p_1q": 0.001,
+    "p_cx": 0.005,
+    "p_readout": 0.01,
+    "noisy_gates_1q": [
+      "sx",
+      "x"
+    ],
+    "rz_noisy": false
+  },
+  "transpile": {
+    "optimization_level": 1,
+    "seed_transpiler": 42,
+    "shots": 4096
+  },
+  "graph_metrics": {
+    "n_qubits": 5,
+    "n_edges": 5,
+    "diameter": 3,
+    "avg_degree": 2.0,
+    "max_degree": 3,
+    "clustering_avg": 0.0,
+    "is_connected": true,
+    "is_bipartite": true
+  },
+  "design_rationale": "Designed: 4-cycle (qubits 0-1-2-3) plus tail (3-4). Natively supports the ring Hamiltonian on the 4-cycle without SWAPs. Max degree 3 (qubit 3 has degree 3). 5 edges."
+}

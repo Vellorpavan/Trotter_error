@@ -1,0 +1,118 @@
+{
+  "name": "B_star",
+  "n_qubits": 9,
+  "coupling_map": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      4
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      5
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      7,
+      6
+    ],
+    [
+      7,
+      4
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      3
+    ],
+    [
+      6,
+      8
+    ],
+    [
+      8,
+      6
+    ]
+  ],
+  "basis_gates": [
+    "rz",
+    "sx",
+    "x",
+    "cx"
+  ],
+  "noise": {
+    "p_1q": 0.001,
+    "p_cx": 0.005,
+    "p_readout": 0.01,
+    "noisy_gates_1q": [
+      "sx",
+      "x"
+    ],
+    "rz_noisy": false
+  },
+  "transpile": {
+    "optimization_level": 1,
+    "seed_transpiler": 42,
+    "shots": 4096
+  },
+  "graph_metrics": {
+    "n_qubits": 9,
+    "n_edges": 10,
+    "diameter": 6,
+    "avg_degree": 2.2222222222222223,
+    "max_degree": 3,
+    "clustering_avg": 0.0,
+    "is_connected": true,
+    "is_bipartite": true
+  },
+  "design_rationale": "Designed: two 4-cycles connected by a bridge, plus one pendant qubit. 10 edges. Max degree 3. Both 4-cycles can host the ring Hamiltonian. Bridge enables flexible layout for 4-spin chains."
+}

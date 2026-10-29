@@ -1,0 +1,6 @@
+processor,n_qubits,n_edges,diameter,avg_degree,max_degree,clustering_avg,is_connected,is_bipartite
+A0,5,4,4,1.6,2,0.0,True,True
+A1,5,4,3,1.6,3,0.0,True,True
+A_star,5,5,3,2.0,3,0.0,True,True
+B0,9,12,4,2.6666666666666665,5,0.13333333333333333,True,False
+B_star,9,10,6,2.2222222222222223,3,0.0,True,True

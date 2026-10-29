@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-10-28T22:23:29.235825+00:00",
+  "total_checks": 10,
+  "passed_checks": 10,
+  "all_passed": true,
+  "checks": {
+    "V1_hamiltonian_2qubit": true,
+    "V2_initial_Z0": true,
+    "V3_noiseless_convergence": true,
+    "V4_zero_noise_matches_noiseless": true,
+    "V5_swap_counts": true,
+    "V6_cx_identity": true,
+    "V7_active_qubit_sim": true,
+    "V8_dm_vs_shot": true,
+    "V9_n_star_accuracy": true,
+    "V10_heldout_prediction": true
+  },
+  "packages": {
+    "qiskit": "2.6.1",
+    "qiskit_aer": "0.18.2",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pandas": "3.1.0"
+  }
+}

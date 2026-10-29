@@ -1,0 +1,50 @@
+name: StepWise-Q CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-and-validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8
+
+      - name: Syntax and lint check
+        run: |
+          # Stop build if there are Python syntax errors or undefined names
+          flake8 src tests --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Run automated unit tests
+        run: |
+          python -m unittest discover tests -v
+
+      - name: Run 10/10 validation suite
+        run: |
+          python -m src.metrics
+
+      - name: Run fast smoke benchmark
+        run: |
+          python run_all.py --smoke --no-backup
+

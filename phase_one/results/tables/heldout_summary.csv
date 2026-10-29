@@ -1,0 +1,4 @@
+model,mae_steps,pct_within_1_step,pct_within_2_steps
+Model_B_observable_attenuation,0.33,88.9,94.4
+Model_A_additive_heuristic,2.5,44.4,44.4
+Trivial_always_n4,1.67,50.0,83.3

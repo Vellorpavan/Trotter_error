@@ -7,6 +7,8 @@
 [![Competition](https://img.shields.io/badge/Competition-Qiskit_Fall_Fest_2026-6929C4?style=for-the-badge&logo=qiskit&logoColor=white)](https://qiskit.org/)
 [![Track](https://img.shields.io/badge/Track-3:_Quantum_Simulation-0062FF?style=for-the-badge)](https://qiskit.org/)
 [![Problem](https://img.shields.io/badge/Problem-PS--S3:_Trotter_Noise_Accumulation-198038?style=for-the-badge)](https://qiskit.org/)
+[![Live 3D Lab](https://img.shields.io/badge/Live_Demo-3D_Quantum_Lab-00E5FF?style=for-the-badge&logo=three.js&logoColor=black)](https://vellorpavan.github.io/Trotter_error/)
+[![Phase 1 Branch](https://img.shields.io/badge/Phase_1-Branch_&_Archive-FF9800?style=for-the-badge&logo=git&logoColor=white)](https://github.com/Vellorpavan/Trotter_error/tree/phase1)
 [![Tests](https://img.shields.io/badge/Tests-14%2F14_Passing-059669?style=for-the-badge&logo=checkmarx&logoColor=white)](tests/test_all.py)
 [![Python](https://img.shields.io/badge/Python-3.10_%7C_3.11_%7C_3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 
@@ -281,6 +283,10 @@ At optimal operating point $n^* = 7$ on Processor D, physical noise depresses ra
 
 To complement our static benchmarking figures, StepWise-Q includes a **hardware-accelerated 3D WebGL laboratory** built with **Three.js** and **React**. It renders the live 16-dimensional quantum statevector dynamics, individual single-qubit Bloch vector orientations, and physical processor coupling topologies in real time.
 
+> [!NOTE]
+> **Why the 3D canvas is launched in a browser rather than executing inline in this README:**
+> GitHub Markdown automatically strips `<script>`, `<canvas>`, and `<iframe>` tags from `.md` files for platform security (preventing XSS attacks). Therefore, interactive WebGL runtimes cannot execute *directly inside* static GitHub Markdown pages. We provide both a **live zero-install online deployment** on GitHub Pages and a **1-click local launch** using the exact React + Three.js code!
+
 ```
 +-----------------------------------------------------------------------------------------+
 |                  StepWise-Q 3D WebGL Quantum Simulation Laboratory                      |
@@ -303,31 +309,34 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
 5. **Projective Readout Emulation:** Sample 4,096-shot projective measurements with simulated readout error directly in the browser.
 
 ### 🚀 How to Launch the 3D Simulation
-The 3D laboratory is completely self-contained with **zero build steps required**:
 
-- **Option A (1-Click Direct Launch):**
+- **Option 1 (Instant Online Demo — Zero Install):**
+  Click below to open the deployed WebGL laboratory directly in your browser:
+  👉 **[https://vellorpavan.github.io/Trotter_error/](https://vellorpavan.github.io/Trotter_error/)**
+
+- **Option 2 (1-Click Local Browser Launch):**
   ```bash
   open visualization/index.html
   ```
-  *(Or double-click `visualization/index.html` in your file browser).*
+  *(Or double-click `visualization/index.html` in macOS Finder / Windows Explorer).*
 
-- **Option B (Local Web Server):**
+- **Option 3 (Local HTTP Server):**
   ```bash
   python -m http.server 8000 --directory visualization
-  # Open http://localhost:8000 in Chrome, Safari, or Firefox
+  # Open http://localhost:8000 in your browser
   ```
 
-- **Option C (React/JSX Component):**
-  The modular React component is available at [`src/Interactive3DSimulation.jsx`](src/Interactive3DSimulation.jsx) for integration into React/Vite/Next.js quantum web applications.
+- **Option 4 (React/Vite Component Source):**
+  The modular React JSX component source is stored in [`src/Interactive3DSimulation.jsx`](src/Interactive3DSimulation.jsx) for integration into React, Vite, or Next.js applications.
 
 ---
 
-## 🗂️ Repository Architecture
+## 🗂️ Repository Architecture & Phase 1 Archive
 
 ```
 .
 ├── README.md                      # Primary hackathon documentation & visual dashboard
-├── report.md                      # Comprehensive 8-page scientific technical paper
+├── report.md                      # Comprehensive 8-page scientific technical paper (Phase 2)
 ├── main.ipynb                     # Executable master notebook (recomputes end-to-end in ~7s)
 ├── run_all.py                     # Headless standalone CLI reproduction script (~4s)
 ├── qff_sim.py                     # Official simulation module (byte-for-byte identical to kit)
@@ -338,6 +347,31 @@ The 3D laboratory is completely self-contained with **zero build steps required*
 ├── src/
 │   └── Interactive3DSimulation.jsx# Full React 18 + Three.js interactive component
 ├── processors/
+│   └── processor_D.json           # Objective 2 co-designed 9-qubit 3x3 grid processor
+├── results/
+│   ├── figures/                   # 6 high-resolution publication figures (PNG)
+│   └── tables/                    # 5 official CSV benchmark tables (zero NaN values)
+├── tests/
+│   └── test_all.py                # 14 automated unit tests covering all 5 objectives
+├── tools/
+│   └── check_processor_d.py       # Official verification checker for Processor D
+├── starter/                       # Clean copy of original challenge-kit distribution
+│   └── KIT_README.md              # Original starter README (matches MANIFEST.sha256)
+└── phase_one/                     # Complete Phase 1 Archive (Branch: 'phase1')
+    ├── report.md                  # Phase 1 comprehensive scientific report
+    ├── Architecture.md            # Phase 1 architecture & model design documentation
+    ├── ARCHITECTURE.md.pdf        # Rendered Phase 1 architecture paper
+    ├── main.ipynb                 # Phase 1 executable notebook
+    ├── results/                   # Phase 1 benchmark tables & figures
+    └── tests/                     # Phase 1 test suite (8 test suites)
+```
+
+> [!TIP]
+> **Accessing Complete Phase 1 Git History:**
+> The complete 11-commit Git history of Phase 1 is permanently preserved on the **[`phase1` branch](https://github.com/Vellorpavan/Trotter_error/tree/phase1)**:
+> ```bash
+> git fetch origin phase1 && git checkout phase1
+> ```
 │   └── processor_D.json           # 9-qubit 3x3 grid custom processor configuration
 ├── results/
 │   ├── figures/                   # 300-DPI publication figures

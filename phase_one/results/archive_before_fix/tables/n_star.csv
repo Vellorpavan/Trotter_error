@@ -1,0 +1,7 @@
+processor,g,n_star,n_star_pred,ci_model_lower,ci_model_upper,ci_disc_lower,ci_disc_upper
+A_star,0.5,4,7,6.1,9.2,2,8
+A_star,1.0,6,7,5.4,7.7,4,8
+A_star,1.5,4,9,7.3,10.9,4,8
+B_star,0.5,4,7,6.1,9.2,2,8
+B_star,1.0,6,7,5.4,7.7,4,8
+B_star,1.5,4,9,7.3,10.9,4,8
