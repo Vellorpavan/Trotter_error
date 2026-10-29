@@ -259,11 +259,11 @@ At optimal operating point $n^* = 7$ on Processor D, physical noise depresses ra
 To complement our static benchmarking figures, StepWise-Q includes a **hardware-accelerated 3D WebGL laboratory** built with **Three.js** and **React**. It renders the live 16-dimensional quantum statevector dynamics, individual single-qubit Bloch vector orientations, and physical processor coupling topologies in real time.
 
 <a href="https://stepwise-q-interactive-3d-quantum-noise-simulator.ai.studio" target="_blank">
-  <img src="https://stepwise-q-interactive-3d-quantum-noise-simulator.ai.studio" alt="Launch 3D Quantum Lab" />
+  <img src="https://img.shields.io/badge/Launch_Interactive_WebGL_Lab-Full_Screen_Orbit_Controls-00E5FF?style=for-the-badge&logo=three.js&logoColor=black" alt="Launch 3D Quantum Lab" />
 </a>
 &nbsp;&nbsp;
 <a href="https://stepwise-q-interactive-3d-quantum-noise-simulator.ai.studio" target="_blank">
-  <img src="https://stepwise-q-interactive-3d-quantum-noise-simulator.ai.studio" alt="Cloud Interactive View" />
+  <img src="https://img.shields.io/badge/Cloud_Interactive_View-Open_in_New_Tab-10B981?style=for-the-badge&logo=google&logoColor=white" alt="Cloud Interactive View" />
 </a>
 
 </div>
