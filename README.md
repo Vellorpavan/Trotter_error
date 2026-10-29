@@ -286,28 +286,6 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
 4. **Playback & Scrubbing Timeline:** Scrub through Trotter evolution steps ($t \in [0, 2.0]$) with variable playback speeds ($0.5\times, 1.0\times, 2.0\times, 4.0\times$), stepping forward or backward gate by gate.
 5. **Projective Readout Emulation:** Sample 4,096-shot projective measurements with simulated readout error directly in the browser.
 
-### 🚀 How to Launch the 3D Simulation
-
-- **Option 1 (Interactive Cloud / Full Screen):**
-  👉 **[Interactive 3D Quantum Simulation Lab](https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4)**
-
-- **Option 2 (GitHub Pages Live Deployment):**
-  👉 **[https://vellorpavan.github.io/Trotter_error/](https://vellorpavan.github.io/Trotter_error/)**
-
-- **Option 3 (1-Click Local Browser Launch):**
-  ```bash
-  open visualization/index.html
-  ```
-
-- **Option 4 (Local HTTP Server):**
-  ```bash
-  python -m http.server 8000 --directory visualization
-  # Open http://localhost:8000 in your browser
-  ```
-
-- **Option 5 (React/Vite Component Source):**
-  The modular React JSX component source is stored in [`src/Interactive3DSimulation.jsx`](src/Interactive3DSimulation.jsx) for integration into React, Vite, or Next.js applications.
-
 ---
 
 ## 🗂️ Repository Architecture & Phase 1 Archive
