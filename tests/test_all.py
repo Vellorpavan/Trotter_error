@@ -49,7 +49,7 @@ class TestProcessorD(unittest.TestCase):
     def test_qubit_count(self):
         n = self.processor["num_qubits"]
         self.assertTrue(4 <= n <= 12, f"num_qubits must be between 4 and 12, got {n}")
-        self.assertEqual(n, 9, "Processor D should have 9 qubits (3x3 grid)")
+        self.assertEqual(n, 6, "Processor D should have 6 qubits (2x3 ladder)")
 
     def test_max_degree(self):
         deg = {i: 0 for i in range(self.processor["num_qubits"])}

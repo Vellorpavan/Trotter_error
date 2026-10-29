@@ -1,6 +1,7 @@
 # PS-S3: Noise Accumulation in Trotter Circuits
 ### Final Technical Report — StepWise-Q
 **Qiskit Fall Fest 2026 | Track 3: Quantum Simulation | SRM University-AP**
+**Authors:** Jagadesh ([@jagadesh-jpg](https://github.com/jagadesh-jpg)) & Vellor Pavan ([@Vellorpavan](https://github.com/Vellorpavan))
 
 > **Executive Statement:** We determine the optimal Trotter step count $n^*$ balancing algorithmic discretization error against physical device noise for a 4-spin Transverse-Field Ising Model (TFIM) across two custom-designed quantum processors ($A^*$ and $B^*$) and three official competition reference graphs. This report provides complete quantitative benchmark data, theoretical error modeling, statistical uncertainty estimation, and rigorous physical analysis addressing real-device noise mechanisms.
 

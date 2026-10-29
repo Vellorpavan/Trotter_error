@@ -2,10 +2,14 @@
 
 ### StepWise-Q: Optimal Trotter Step Prediction on Custom Quantum Topologies
 **Qiskit Fall Fest 2026 | Track 3: Quantum Simulation | SRM University-AP**
+**Authors:** Jagadesh ([@jagadesh-jpg](https://github.com/jagadesh-jpg)) & Vellor Pavan ([@Vellorpavan](https://github.com/Vellorpavan))
+
+> [!WARNING]
+> **Phase 1 Historical Archive Notice:** This `Phase_1/` directory is an immutable historical benchmark archive and reference preserved from Phase 1. It was developed against **Qiskit 2.6.1** and is preserved for historical provenance. Do not execute scripts or notebooks inside `Phase_1/` directly with the Phase 2 environment. Phase 2 strictly uses the locked official QFF 2026 Phase 2 environment (`qiskit==1.4.6`, `qiskit-aer==0.18.0`). All active Phase 2 code is located at the root repository.
 
 <p align="center">
   <img src="https://img.shields.io/badge/Problem-PS--S3:_Noise_Accumulation_in_Trotter_Circuits-6929C4?style=for-the-badge" alt="Problem PS-S3" />
-  <img src="https://img.shields.io/badge/Qiskit-2.6.1-6929C4?style=for-the-badge&logo=qiskit&logoColor=white" alt="Qiskit 2.6.1" />
+  <img src="https://img.shields.io/badge/Qiskit-2.6.1_(Archive)-6929C4?style=for-the-badge&logo=qiskit&logoColor=white" alt="Qiskit 2.6.1" />
   <img src="https://img.shields.io/badge/Qiskit_Aer-0.18.2-0062FF?style=for-the-badge&logo=ibm&logoColor=white" alt="Qiskit Aer" />
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" />
   <img src="https://img.shields.io/badge/Validation-10%2F10_Rigorous_Tests_Passing-success?style=for-the-badge" alt="Validation 10/10" />
@@ -305,7 +309,9 @@ python run_all.py --all
 
 ---
 
-## 👥 Contributors
+## 👥 Contributors (Team StepWise-Q)
 
+- **Jagadesh** ([@jagadesh-jpg](https://github.com/jagadesh-jpg)) — Research & Hardware Co-Design, Benchmarking, Validation.
 - **Vellor Pavan** ([@Vellorpavan](https://github.com/Vellorpavan)) — Lead Developer & Researcher (Algorithm design, hardware co-design, simulation, metrics, and documentation).
+- **Institution:** SRM University-AP
 

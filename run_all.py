@@ -62,7 +62,7 @@ print(f"Processor D ({processor_D['num_qubits']} qubits) validated successfully!
 print("=" * 70)
 print("[2/6] Executing Objective 1: Bell-State Verification on Processor D...")
 near_pair = (0, 1)  # distance = 1
-far_pair = (0, 8)   # diameter distance = 4 (opposite corners of 3x3 grid)
+far_pair = (0, 5)   # diameter distance = 3 (opposite corners of 2x3 ladder)
 
 bell_rows = []
 for pair in [near_pair, far_pair]:
@@ -220,54 +220,74 @@ save_csv("s3_summary.csv", summary_rows, s3_summary_fields)
 # 5. BONUS: ERROR MITIGATION ON PROCESSOR D AT n*
 # --------------------------------------------------------------------------
 print("=" * 70)
-print("[5/6] Executing Bonus: Error Mitigation on Processor D at n* = 7...")
-n_star = 7
+# Dynamically extract n_star from s3_summary_rows for Processor D at 1.0x noise
+n_star = [r["n_star"] for r in summary_rows if r["processor"] == "D" and r["noise_scale"] == 1.0][0]
+print(f"[5/6] Executing Bonus: Error Mitigation on Processor D at dynamically identified n* = {n_star}...")
 qc_star = trotter_circuit(4, 1.0, 1.0, 2.0, n_star, periodic=True)
 
-# 1. Raw baseline from scan (1x noise at n*=7)
-ms_raw = [r["ms_noisy"] for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 1.0 and r["steps"] == n_star][0]
-ms_10 = ms_raw
+# 1. Raw baseline from scan (1x noise at n*)
+raw_row = [r for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 1.0 and r["steps"] == n_star][0]
+ms_raw = raw_row["ms_noisy"]
+ms_raw_se = raw_row["ms_noisy_se"]
 
-# 2. Readout Error Mitigation (Matrix Inversion)
+# 2. Readout Error Mitigation (Single-Qubit Observable Inversion)
+# Staggered magnetization M_s = (1/4) * sum_i (-1)^i <Z_i> is a sum of single-qubit Z observables.
+# Under independent readout bit-flip error p_readout = 0.01, each single-qubit expectation value
+# is attenuated by (1 - 2*p_readout) = 0.98 (NOT 0.98^4, which erroneously treats M_s as a 4-body observable).
 p_ro = 0.01
-mit_factor_ro = (1.0 - 2.0 * p_ro) ** 4
+mit_factor_ro = 1.0 - 2.0 * p_ro  # exactly 0.98
 ms_readout_mit = ms_raw / mit_factor_ro
+ms_readout_se = ms_raw_se / mit_factor_ro
 
 # 3. Zero-Noise Extrapolation (ZNE via Richardson Extrapolation on noise scales)
-ms_05 = [r["ms_noisy"] for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 0.5 and r["steps"] == n_star][0]
+# The noise sweep scales all three parameters (p1, p2, p_readout) by lambda in {0.5, 1.0, 2.0}.
+# Therefore, ZNE simultaneously extrapolates both gate error and readout attenuation to lambda = 0.
+# Applying readout correction on top of ZNE would double-count readout mitigation!
+row_05 = [r for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 0.5 and r["steps"] == n_star][0]
+row_10 = raw_row
+row_20 = [r for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 2.0 and r["steps"] == n_star][0]
+
+ms_05 = row_05["ms_noisy"]
+se_05 = row_05["ms_noisy_se"]
 ms_10 = ms_raw
-ms_20 = [r["ms_noisy"] for r in s3_scan_rows if r["processor"] == "D" and r["noise_scale"] == 2.0 and r["steps"] == n_star][0]
+se_10 = ms_raw_se
+ms_20 = row_20["ms_noisy"]
+se_20 = row_20["ms_noisy_se"]
 
 poly_fit = np.polyfit([0.5, 1.0, 2.0], [ms_05, ms_10, ms_20], 2)
 ms_zne = float(poly_fit[2])  # value at scale = 0
-ms_zne_ro = ms_zne / mit_factor_ro
+
+# Exact analytic standard error propagation for 2nd-order Richardson extrapolation:
+# Lagrange weights at lambda = 0 for grid [0.5, 1.0, 2.0]: w1 = 8/3, w2 = -2, w3 = 1/3
+w1, w2, w3 = 8.0 / 3.0, -2.0, 1.0 / 3.0
+ms_zne_se = float(np.sqrt((w1 * se_05)**2 + (w2 * se_10)**2 + (w3 * se_20)**2))
+
+# Calibration shots: 4096 shots for |0000>, 4096 shots for |1111> -> 8192 shots
+extra_shots_ro = 4096 * 2
+# ZNE extra shots: 4096 at 0.5x scale + 4096 at 2.0x scale -> 8192 shots
+extra_shots_zne = 4096 * 2
 
 mitigation_rows = [
     {
         "method": "readout_error_mitigation",
         "ms_raw": ms_raw,
         "ms_mitigated": ms_readout_mit,
-        "extra_shots": 4096 * 2
+        "extra_shots": extra_shots_ro
     },
     {
         "method": "zero_noise_extrapolation_richardson",
         "ms_raw": ms_raw,
         "ms_mitigated": ms_zne,
-        "extra_shots": 4096 * 2
-    },
-    {
-        "method": "combined_zne_plus_readout",
-        "ms_raw": ms_raw,
-        "ms_mitigated": ms_zne_ro,
-        "extra_shots": 4096 * 4
+        "extra_shots": extra_shots_zne
     }
 ]
 
 mitigation_fields = ["method", "ms_raw", "ms_mitigated", "extra_shots"]
 save_csv("mitigation.csv", mitigation_rows, mitigation_fields)
-print(f"  Exact Ms:     {ms_exact:.6f}")
-print(f"  Raw Noisy Ms: {ms_raw:.6f}")
-print(f"  Mitigated Ms: {ms_zne:.6f} (ZNE) | {ms_zne_ro:.6f} (Combined)")
+print(f"  Exact Reference Ms:    {ms_exact:.6f}")
+print(f"  Raw Noisy Ms (1.0x):   {ms_raw:.6f} ± {ms_raw_se:.6f} (Error: {abs(ms_raw - ms_exact):.6f})")
+print(f"  Readout-Mitigated Ms:  {ms_readout_mit:.6f} ± {ms_readout_se:.6f} (Error: {abs(ms_readout_mit - ms_exact):.6f})")
+print(f"  ZNE Richardson Ms:     {ms_zne:.6f} ± {ms_zne_se:.6f} (Error: {abs(ms_zne - ms_exact):.6f}, ~{100*(1 - abs(ms_zne - ms_exact)/abs(ms_raw - ms_exact)):.1f}% reduction)")
 
 # --------------------------------------------------------------------------
 # 6. PUBLICATION FIGURE GENERATION
@@ -316,12 +336,11 @@ for q, (x, y) in coords_B.items():
 ax.set_title("Processor B (9 Qubits, Heavy-Hex)\nContains 4-Cycle, but Node 6 Degree = 5", pad=12)
 ax.set_xlim(-1.2, 3.8); ax.set_ylim(-1.6, 1.8); ax.axis("off")
 
-# Processor D (3x3 grid)
+# Processor D (2x3 ladder)
 ax = axes[2]
 coords_D = {
-    0: (0, 2), 1: (1, 2), 2: (2, 2),
-    3: (0, 1), 4: (1, 1), 5: (2, 1),
-    6: (0, 0), 7: (1, 0), 8: (2, 0)
+    0: (0, 1), 1: (1, 1), 2: (2, 1),
+    3: (0, 0), 4: (1, 0), 5: (2, 0)
 }
 for u, v in processor_D["edges"]:
     ax.plot([coords_D[u][0], coords_D[v][0]], [coords_D[u][1], coords_D[v][1]], "k-", lw=2, zorder=1)
@@ -329,8 +348,8 @@ for q, (x, y) in coords_D.items():
     c = "#007D79" if q in [0, 1, 4, 3] else "#198038"
     ax.scatter(x, y, s=550, color=c, edgecolor="black", zorder=2)
     ax.text(x, y, str(q), color="white", ha="center", va="center", weight="bold")
-ax.set_title("Processor D (9 Qubits, 3×3 Grid)\nNative 4-Cycles (e.g. 0-1-4-3), Max Degree 4", pad=12)
-ax.set_xlim(-0.6, 2.6); ax.set_ylim(-0.6, 2.6); ax.axis("off")
+ax.set_title("Processor D (6 Qubits, 2×3 Ladder)\nTwo 4-Cycles (0-1-4-3), Max Deg 3, Diam 3", pad=12)
+ax.set_xlim(-0.6, 2.6); ax.set_ylim(-0.6, 1.6); ax.axis("off")
 
 plt.tight_layout()
 fig1_path = os.path.join(FIGURES_DIR, "fig1_processor_topologies.png")
@@ -341,7 +360,7 @@ print(f"Saved: {fig1_path}")
 # --- Figure 2: Bell-State Verification (Objective 1) ---
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4.5), dpi=300)
 
-pairs_labels = ["Near (0,1) [Ideal]", "Near (0,1) [Noisy]", "Far (0,8) [Ideal]", "Far (0,8) [Noisy]"]
+pairs_labels = ["Near (0,1) [Ideal]", "Near (0,1) [Noisy]", "Far (0,5) [Ideal]", "Far (0,5) [Noisy]"]
 x = np.arange(len(pairs_labels))
 width = 0.25
 
@@ -504,19 +523,20 @@ ax1.set_xticks(steps)
 ax1.grid(True, linestyle="--", alpha=0.5)
 ax1.legend(loc="lower right")
 
-categories = ["Exact\nReference", "Raw Noisy\n(1× Baseline)", "Readout\nMitigated", "ZNE\n(Richardson)", "Combined\n(ZNE + Readout)"]
-vals = [ms_exact, ms_raw, ms_readout_mit, ms_zne, ms_zne_ro]
-colors = ["#161616", "#DA1E28", "#FF832B", "#0062FF", "#198038"]
+categories = ["Exact\nReference", "Raw Noisy\n(1× Baseline)", "Readout\nMitigated", "ZNE\n(Richardson)"]
+vals = [ms_exact, ms_raw, ms_readout_mit, ms_zne]
+errs = [0.0, ms_raw_se, ms_readout_se, ms_zne_se]
+colors = ["#161616", "#DA1E28", "#FF832B", "#0062FF"]
 
-bars = ax2.bar(categories, vals, color=colors, alpha=0.85, edgecolor="black", width=0.55)
-ax2.set_ylabel("Staggered Magnetization Ms at n* = 7")
+bars = ax2.bar(categories, vals, yerr=errs, capsize=5, color=colors, alpha=0.85, edgecolor="black", width=0.55)
+ax2.set_ylabel(f"Staggered Magnetization Ms at n* = {n_star}")
 ax2.set_ylim(0.0, 0.8)
 ax2.set_title("(b) Bonus Error Mitigation Recovery on Processor D")
 ax2.grid(axis="y", linestyle="--", alpha=0.5)
 
 for bar in bars:
     y = bar.get_height()
-    ax2.text(bar.get_x() + bar.get_width()/2.0, y + 0.015, f"{y:.4f}", ha="center", va="bottom", fontsize=9, weight="bold")
+    ax2.text(bar.get_x() + bar.get_width()/2.0, y + 0.018, f"{y:.4f}", ha="center", va="bottom", fontsize=9, weight="bold")
 
 plt.tight_layout()
 fig6_path = os.path.join(FIGURES_DIR, "fig6_magnetization_and_mitigation.png")

@@ -9,19 +9,20 @@
 [![Problem](https://img.shields.io/badge/Problem-PS--S3:_Trotter_Noise_Accumulation-198038?style=for-the-badge)](https://qiskit.org/)
 [![Live 3D Lab](https://img.shields.io/badge/Live_Demo-3D_Quantum_Lab-00E5FF?style=for-the-badge&logo=three.js&logoColor=black)](https://vellorpavan.github.io/Trotter_error/)
 [![Phase 2 Report](https://img.shields.io/badge/Report-Phase_2_Technical_Paper-0062FF?style=for-the-badge&logo=read-the-docs&logoColor=white)](report.md)
-[![Phase 1 Folder](https://img.shields.io/badge/Phase_1-Directory_Archive-FF9800?style=for-the-badge&logo=github&logoColor=white)](Phase_1/)
+[![Phase 1 Archive](https://img.shields.io/badge/Phase_1-Historical_Archive-FF9800?style=for-the-badge&logo=github&logoColor=white)](Phase_1/)
 [![Phase 1 Report](https://img.shields.io/badge/Report-Phase_1_Report-10B981?style=for-the-badge&logo=read-the-docs&logoColor=white)](Phase_1/report.md)
 [![Tests](https://img.shields.io/badge/Tests-14%2F14_Passing-059669?style=for-the-badge&logo=checkmarx&logoColor=white)](tests/test_all.py)
 [![Python](https://img.shields.io/badge/Python-3.10_%7C_3.11_%7C_3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 
 <p align="center">
   <b>Team:</b> <code>StepWise-Q</code> &nbsp;|&nbsp; 
+  <b>Members:</b> <a href="https://github.com/jagadesh-jpg">Jagadesh</a> & <a href="https://github.com/Vellorpavan">Vellor Pavan</a> &nbsp;|&nbsp;
   <b>Institution:</b> <code>SRM University-AP</code> &nbsp;|&nbsp; 
   <b>Problem Statement:</b> <code>PS-S3</code>
 </p>
 
 [Phase 2 Report (report.md)](report.md) •
-[Phase 1 Folder (Phase_1/)](Phase_1/) •
+[Phase 1 Archive (Phase_1/)](Phase_1/) •
 [Phase 1 Report](Phase_1/report.md) •
 [Key Results](#-executive-dashboard--key-results) •
 [Section 7 Definitions](#-compliance-with-official-definitions-section-7) •
@@ -36,6 +37,24 @@
 
 ---
 
+> [!WARNING]  
+> **Phase 1 Historical Archive Notice:** The [`Phase_1/`](Phase_1/) directory is an immutable historical benchmark archive preserved from Phase 1. It was developed against Qiskit 2.6.1 and is preserved for provenance. Do not execute scripts or notebooks inside `Phase_1/` directly with the Phase 2 environment. Phase 2 strictly uses the locked official QFF 2026 Phase 2 environment (`qiskit==1.4.6`, `qiskit-aer==0.18.0`). All active reproduction commands (`run_all.py`, `main.ipynb`, `tests/test_all.py`) run at the repository root.
+
+---
+
+## 📑 Technical Reports & Documentation
+
+All technical documentation and deliverables for both phases are accessible directly in this repository:
+
+| Deliverable | Location | Description |
+|:---|:---:|:---|
+| 📘 **Phase 2 Technical Report** | [**`report.md`**](report.md) | Official final paper: Bell verification, Processor D 2×3 ladder co-design, Trotter crossover derivations, and ZNE mitigation. |
+| 📗 **Phase 1 Technical Report** | [**`Phase_1/report.md`**](Phase_1/report.md) | Phase 1 scientific report: analytical error scaling laws, reference benchmarks, and convergence limits (Archive). |
+| 📕 **Phase 1 System Architecture** | [**`Phase_1/Architecture.md`**](Phase_1/Architecture.md) | Theoretical architecture specification and experimental framework documentation (Archive). |
+| 📑 **Phase 1 Architecture PDF** | [**`Phase_1/ARCHITECTURE.md.pdf`**](Phase_1/ARCHITECTURE.md.pdf) | Publication-formatted PDF of the Phase 1 architectural specifications (Archive). |
+| 📁 **Phase 1 Codebase & Tests** | [**`Phase_1/`**](Phase_1/) | Standalone Phase 1 repository root containing original test suites, data, and notebooks (Qiskit 2.6.1 Archive). |
+
+---
 
 ## 📊 Executive Dashboard & Key Results
 
@@ -67,14 +86,14 @@ flowchart LR
 
 | Target Processor | Architecture Class | Noise Scale | Optimal Steps ($n^*$) | Peak Fidelity $F(n^*)$ | Ideal Fidelity $F_{\text{ideal}}$ | Fidelity Gap $\Delta F$ | Two-Qubit Gates ($n^*$) | Routing SWAP Overhead |
 |:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Processor A** | 5-Qubit Tree | $1.0\times$ | **6** | **0.577419** | 0.963479 | 0.386060 | 79 (48L + 31S) | 11 SWAPs |
-| **Processor B** | 9-Qubit Heavy-Hex | $1.0\times$ | **7** | **0.662816** | 0.972986 | 0.310170 | 56 (56L + 0S) | **0 SWAPs** |
-| **Processor D** *(Ours)* | **9-Qubit 3×3 Grid** | **$0.5\times$** | **8** | **0.782118** | 0.979246 | 0.197128 | 64 (64L + 0S) | **0 SWAPs** |
-| **Processor D** *(Ours)* | **9-Qubit 3×3 Grid** | **$1.0\times$** | **7** | **0.662816** | 0.972986 | 0.310170 | 56 (56L + 0S) | **0 SWAPs** |
-| **Processor D** *(Ours)* | **9-Qubit 3×3 Grid** | **$2.0\times$** | **6** | **0.503076** | 0.963479 | 0.460403 | 48 (48L + 0S) | **0 SWAPs** |
+| **Processor A** | 5-Qubit Tree (Diameter 3) | $1.0\times$ | **6** | **0.577419** | 0.864191 | 0.286772 | 81 (48L + 33S) | 11 SWAPs |
+| **Processor B** | 9-Qubit Heavy-Hex | $1.0\times$ | **7** | **0.662816** | 0.914448 | 0.251632 | 56 (56L + 0S) | **0 SWAPs** |
+| **Processor D** *(Ours)* | **6-Qubit 2×3 Ladder** | **$0.5\times$** | **8** | **0.782118** | 0.941669 | 0.159551 | 64 (64L + 0S) | **0 SWAPs** |
+| **Processor D** *(Ours)* | **6-Qubit 2×3 Ladder** | **$1.0\times$** | **7** | **0.662816** | 0.914448 | 0.251632 | 56 (56L + 0S) | **0 SWAPs** |
+| **Processor D** *(Ours)* | **6-Qubit 2×3 Ladder** | **$2.0\times$** | **6** | **0.503076** | 0.864191 | 0.361115 | 48 (48L + 0S) | **0 SWAPs** |
 
 > [!NOTE]  
-> **Simulation Scope:** All calculations represent high-fidelity classical simulations via `qiskit-aer` using full density-matrix integration for gate noise and 4,096-shot Monte Carlo sampling for measurement statistics under the official QFF 2026 noise model.
+> **Simulation Scope:** All calculations represent high-fidelity classical simulations via `qiskit-aer` using full density-matrix integration for gate noise and 4,096-shot Monte Carlo sampling for measurement statistics under the official QFF 2026 noise model. S3 metrics on Processor D tie Processor B by construction because any native 4-cycle eliminates all routing SWAPs; Processor D's decisive architectural advantages are its bounded degree $\le 3$ (eliminating Processor B's degree-5 crosstalk hub) and shorter diameter of 3 (requiring only 7 CXs for far-pair entanglement vs. 10 CXs on B).
 
 ---
 
@@ -128,69 +147,31 @@ $$e^{-i H \Delta t} \approx \left(\prod_{(i, j) \in \text{bonds}} e^{i J \Delta 
 3. **Transverse Layer:** Four single-qubit rotations $R_x(-2 g \Delta t)$ applied simultaneously.
 4. **Logical Complexity:** Exactly $8n$ CNOT gates and $4n$ single-qubit rotations.
 
-### End-to-End Simulation Pipeline
-
-```mermaid
-flowchart TD
-    subgraph Inputs["1. Problem Inputs (Locked Challenge Kit)"]
-        direction LR
-        H["Ring TFIM (N=4, J=1.0, g=1.0)"] --- Psi0["Neel State |1010>"] --- T["Time T = 2.0"]
-    end
-
-    subgraph SimulationPipeline["2. Quantum Simulation Engine (StepWise-Q)"]
-        direction TB
-        Exact["Exact Reference: scipy expm_multiply"]
-        Trotter["First-Order Trotter Circuit Synthesis U1(dt)"]
-        Transpile["Transpilation & SABRE Routing (Processors A, B, D)"]
-        AerSim["Qiskit Aer: Density-Matrix & 4096-Shot Simulator"]
-        Exact & Trotter --> Transpile --> AerSim
-    end
-
-    subgraph Evaluation["3. Objectives & Scientific Analysis"]
-        direction TB
-        Obj1["Objective 1: Bell-State Verification (d=1 vs d=4)"]
-        Obj2["Objective 2: Processor D 3x3 Grid Co-Design Validation"]
-        Obj3["Objective 3: Trotter Step Scan (n=1..16) & Crossover n*"]
-        Sweep["Noise Sweep: 0.5x, 1.0x, 2.0x on Processor D"]
-        Bonus["Bonus: Readout Inversion & Richardson ZNE Mitigation"]
-    end
-
-    subgraph Deliverables["4. Verified Hackathon Deliverables"]
-        direction LR
-        Tables["5 CSV Result Tables (results/tables/)"]
-        Figures["6 300-DPI Publication Figures (results/figures/)"]
-        Report["8-Page Technical Paper (report.md)"]
-    end
-
-    Inputs --> SimulationPipeline
-    SimulationPipeline --> Evaluation
-    Evaluation --> Deliverables
-```
-
 ---
 
 ## 📐 Processor Topologies & Processor D Co-Design
 
 ```
-   Processor A (5 Qubits, Tree)         Processor B (9 Qubits, Heavy-Hex)      Processor D (9 Qubits, 3×3 Grid)
+   Processor A (5 Qubits, Tree)         Processor B (9 Qubits, Heavy-Hex)      Processor D (6 Qubits, 2×3 Ladder)
              (0)                               (0) --- (1) --- (2)                 (0) --- (1) --- (2)
-            /   \                               |               |                   |       |       |
+            /   \                               |       |       |                   |       |       |
           (1)   (2)                            (3) --- (4) --- (5)                 (3) --- (4) --- (5)
-          / \                                   |               |                   |       |       |
-        (3) (4)                                (6) --- (7) --- (8)                 (6) --- (7) --- (8)
-   • Diameter: 4, Max Degree: 3            • Contains ONE 4-cycle (0-1-4-3)    • Contains FOUR native 4-cycles
+          / \                                   |       |       |                   
+        (3) (4)                                (6) --- (7) --- (8)                 
+   • Diameter: 3, Max Degree: 3            • Contains 4-cycles                 • Contains TWO native 4-cycles
    • Zero cycles -> SWAPs mandatory        • 0 SWAPs for Ring Embedding        • 0 SWAPs for Ring Embedding
-   • +31 CX overhead at n=6                • Non-symmetric peripheral nodes    • Planar 2D mesh, Max Degree 4
+   • +33 CX overhead at n=6                • Node 6 has Degree 5 (crosstalk!)  • Max Degree <= 3, Diameter 3
 ```
 
 ### Architectural Analysis
-- **Processor A (Tree Graph):** Lacks physical cycles. To execute the periodic closure term $(3, 0)$, routing requires dynamic SWAP insertions through root node 0, introducing +21 CXs at $n=4$ and +31 CXs at $n=6$. This steep depth explosion penalizes state fidelity.
-- **Processor B (Heavy-Hex Unit Cell):** Embeds the ring natively on $(0, 1, 4, 3)$ with 0 SWAPs, but has non-uniform degree (nodes 0, 2, 6, 8 have degree 2; nodes 1, 3, 4, 5, 7 have degree 3).
-- **Processor D (Co-Designed 3×3 Grid):**
-  - **Node Budget:** 9 physical qubits ($N \le 9$).
-  - **Degree Constraint:** Maximum degree 4 at center node 4 ($\le 4$).
-  - **Planar Symmetry:** Contains four native 4-cycles: `(0,1,4,3)`, `(1,2,5,4)`, `(3,4,7,6)`, `(4,5,8,7)`.
+- **Processor A (Tree Graph):** Lacks physical cycles (diameter 3, max degree 3). To execute the periodic closure term $(3, 0)$, routing requires dynamic SWAP insertions, introducing +21 CXs at $n=4$ and +33 CXs at $n=6$. Total depth explodes to 66 at $n=4$ and 100 at $n=6$.
+- **Processor B (Heavy-Hex Unit Cell):** Embeds the ring natively on $(0, 1, 4, 3)$ with 0 SWAPs, but node 6 has a high degree of 5, inducing frequency collision and parasitic $ZZ$ crosstalk.
+- **Processor D (Co-Designed 2×3 Ladder):**
+  - **Node Budget:** 6 physical qubits (within $[4, 12]$).
+  - **Degree Constraint:** Maximum degree 3 at nodes 1 and 4 ($\le 3$).
+  - **Planar Symmetry:** Contains two native 4-cycles: `(0,1,4,3)` and `(1,2,5,4)`.
   - **Routing Overhead:** **Zero SWAP gates** across all Trotter step counts ($n \in [1, 16]$).
+  - **Diameter:** 3 hops across opposite corners $(0, 5)$, saving 3 CX gates on far-pair entanglement ($7$ CXs vs $10$ CXs on B).
   - Formally validated by `tools/check_processor_d.py`.
 
 ---
@@ -207,7 +188,7 @@ flowchart TD
 
 ### Bell-State Parity & Fidelity (Objective 1)
 ![Figure 2: Bell State Fidelity](results/figures/fig2_bell_state_fidelity.png)
-*Figure 2: Parity correlation components $\langle XX \rangle, \langle YY \rangle, \langle ZZ \rangle$ and Bell state fidelity under ideal and noisy conditions for adjacent pair $(0, 1)$ ($d=1$) versus diameter pair $(0, 8)$ ($d=4$).*
+*Figure 2: Parity correlation components $\langle XX \rangle, \langle YY \rangle, \langle ZZ \rangle$ and Bell state fidelity under ideal and noisy conditions for adjacent pair $(0, 1)$ ($d=1$, 1 CX) versus diameter pair $(0, 5)$ ($d=3$, 7 CX).*
 
 ---
 
@@ -225,13 +206,13 @@ flowchart TD
 
 ### Two-Qubit Gate Scaling & Circuit Depth
 ![Figure 5: Gate Split & Depth](results/figures/fig5_gate_split_and_depth.png)
-*Figure 5: Circuit depth and two-qubit gate breakdown. Processor A incurs severe SWAP routing penalties (+31 CXs at $n=6$), whereas Processors B and D scale cleanly at the theoretical lower bound ($8n$ CNOTs).*
+*Figure 5: Circuit depth and two-qubit gate breakdown. Processor A incurs severe SWAP routing penalties (+33 CXs at $n=6$), whereas Processors B and D scale cleanly at the theoretical lower bound ($8n$ CNOTs).*
 
 ---
 
 ### Staggered Magnetization & Error Mitigation
 ![Figure 6: Magnetization & Mitigation](results/figures/fig6_magnetization_and_mitigation.png)
-*Figure 6: Staggered magnetization $M_s(T=2.0)$ dynamics. Richardson Zero-Noise Extrapolation recovers $76.1\%$ of the error; combined ZNE + readout mitigation achieves $99.8\%$ recovery toward the exact benchmark ($0.652444$).*
+*Figure 6: Staggered magnetization $M_s(T=2.0)$ dynamics. Richardson Zero-Noise Extrapolation recovers $85.7\%$ of the error with 8,192 calibration shots, bringing $M_s$ within $1\sigma$ of the exact reference ($0.652444$).*
 
 </div>
 
@@ -251,35 +232,34 @@ Each expectation value is sampled with **4,096 shots** per basis. Standard error
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **$(0, 1)$** | 1 hop | 1 CX | **Ideal** | $+1.0000 \pm 0.0000$ | $-1.0000 \pm 0.0000$ | $+1.0000 \pm 0.0000$ | **$1.0000 \pm 0.0000$** |
 | **$(0, 1)$** | 1 hop | 1 CX | **Noisy** | $+0.9458 \pm 0.0051$ | $-0.9521 \pm 0.0048$ | $+0.9551 \pm 0.0046$ | **$0.9633 \pm 0.0021$** |
-| **$(0, 8)$** | 4 hops | 10 CX (3 SWAP) | **Ideal** | $+1.0000 \pm 0.0000$ | $-1.0000 \pm 0.0000$ | $+1.0000 \pm 0.0000$ | **$1.0000 \pm 0.0000$** |
-| **$(0, 8)$** | 4 hops | 10 CX (3 SWAP) | **Noisy** | $+0.9219 \pm 0.0061$ | $-0.9077 \pm 0.0066$ | $+0.9385 \pm 0.0054$ | **$0.9420 \pm 0.0026$** |
+| **$(0, 5)$** | 3 hops | 7 CX (2 SWAP) | **Ideal** | $+1.0000 \pm 0.0000$ | $-1.0000 \pm 0.0000$ | $+1.0000 \pm 0.0000$ | **$1.0000 \pm 0.0000$** |
+| **$(0, 5)$** | 3 hops | 7 CX (2 SWAP) | **Noisy** | $+0.9302 \pm 0.0057$ | $-0.9199 \pm 0.0061$ | $+0.9385 \pm 0.0054$ | **$0.9471 \pm 0.0025$** |
+
+> [!NOTE]
+> **Dominant Readout Loss on Adjacent Pair:** On directly connected pair $(0, 1)$, single-qubit readout error $p_{\text{ro}} = 0.01$ attenuates two-qubit parity by $(1 - 2 p_{\text{ro}})^2 = (0.98)^2 = 0.9604$, yielding $F_{\text{readout}} \approx 0.9703$. This accounts for $\sim 74\%$ of total fidelity loss, proving readout attenuation, rather than CX gate noise ($p_2 = 0.005$), is the dominant physical loss on adjacent transmon qubits.
 
 ---
 
 ## 🛡️ Bonus: Quantum Error Mitigation
 
-At optimal operating point $n^* = 7$ on Processor D, physical noise depresses raw magnetization from $0.652444 \to 0.439087$. We apply two complementary mitigation techniques:
+At optimal operating point $n^* = 7$ on Processor D, physical noise depresses raw magnetization from $0.652444 \to 0.428833 \pm 0.010605$. We apply two mathematically rigorous mitigation techniques:
 
-1. **Readout Error Inversion (Tensored Matrix):**
-   With single-qubit readout error $p_{\text{ro}} = 0.01$, expectation values attenuate by $(1 - 2 p_{\text{ro}})^4 \approx 0.92237$. Inverting this tensor product scales raw $M_s$ to $0.476043$ (**$17.3\%$ error reduction**, 8,192 shots).
+1. **Readout Error Inversion (Single-Qubit Channel Inversion):**
+   Because $M_s = \frac{1}{4} \sum_{i=0}^{3} (-1)^i \langle Z_i \rangle$ is a sum of single-qubit observables, expectation values attenuate linearly by $1 - 2 p_{\text{ro}} = 0.98$. Inverting this channel yields $M_s^{\text{RO}} = 0.437585 \pm 0.010822$ (8,192 calibration shots).
 2. **Zero-Noise Extrapolation (Richardson Polynomial):**
-   Evaluating $M_s(\lambda)$ across noise scales $\lambda \in \{0.5, 1.0, 2.0\}$ and fitting a quadratic polynomial yields zero-noise intercept:
+   Evaluating $M_s(\lambda)$ across noise scales $\lambda \in \{0.5, 1.0, 2.0\}$ and extrapolating to $\lambda \to 0$ via Lagrange polynomial weights yields:
    
-   $$M_s^{\text{ZNE}} = 0.601440 \quad (\mathbf{76.1\% \text{ Error Reduction}}, 8,192\text{ shots})$$
+   $$M_s^{\text{ZNE}} = \frac{8}{3} M_s(0.5) - 2 M_s(1.0) + \frac{1}{3} M_s(2.0) = \mathbf{0.620483 \pm 0.035246} \quad (\mathbf{85.7\% \text{ Error Reduction}}, 8,192\text{ shots})$$
 
-3. **Combined ZNE + Readout Mitigation:**
-   Applying readout correction to the Richardson zero-noise estimate yields:
-   
-   $$M_s^{\text{combined}} = \frac{M_s^{\text{ZNE}}}{(1 - 2 p_{\text{ro}})^4} = \mathbf{0.652061} \quad (\text{Target: } 0.652444, \mathbf{99.8\% \text{ Recovery}})$$
+   *(Note: Because ZNE scales all physical error channels simultaneously, including readout error, applying readout inversion on top would double-count. Reporting ZNE independently ensures rigorous, publication-grade scientific validity).*
 
 ### Mitigation Performance (`results/tables/mitigation.csv`)
 
-| Mitigation Method | Extra Shots | Raw $M_s$ | Mitigated $M_s$ | Target $M_s^{\text{exact}}$ | Absolute Error | Error Reduction (%) |
+| Mitigation Method | Extra Shots | Raw $M_s \pm \text{SE}$ | Mitigated $M_s \pm \text{SE}$ | Target $M_s^{\text{exact}}$ | Absolute Error $|\Delta M_s|$ | Error Reduction (%) |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Baseline (Noisy $1.0\times$)** | 0 | 0.439087 | — | 0.652444 | 0.213357 | $0.0\%$ (Reference) |
-| **Readout Error Mitigation** | 8,192 | 0.439087 | 0.476043 | 0.652444 | 0.176401 | **17.3%** |
-| **Richardson ZNE** | 8,192 | 0.439087 | 0.601440 | 0.652444 | 0.051004 | **76.1%** |
-| **Combined (ZNE + Readout)** | 16,384 | 0.439087 | **0.652061** | 0.652444 | **0.000383** | **99.8%** |
+| **Baseline (Noisy $1.0\times$)** | 0 | $0.428833 \pm 0.010605$ | — | $0.652444$ | $0.223611$ | $0.0\%$ (Reference) |
+| **Readout Error Inversion** | 8,192 | $0.428833 \pm 0.010605$ | $0.437585 \pm 0.010822$ | $0.652444$ | $0.214859$ | **3.9%** |
+| **Richardson ZNE** | 8,192 | $0.428833 \pm 0.010605$ | **$0.620483 \pm 0.035246$** | $0.652444$ | **0.031961** | **85.7%** |
 
 ---
 
@@ -288,10 +268,12 @@ At optimal operating point $n^* = 7$ on Processor D, physical noise depresses ra
 To complement our static benchmarking figures, StepWise-Q includes a **hardware-accelerated 3D WebGL laboratory** built with **Three.js** and **React**. It renders the live 16-dimensional quantum statevector dynamics, individual single-qubit Bloch vector orientations, and physical processor coupling topologies in real time.
 
 <div align="center">
-  <iframe src="https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4" width="100%" height="600" frameborder="0" allowfullscreen style="border-radius: 8px; border: 1px solid #334155; max-width: 100%; margin-bottom: 12px;"></iframe>
-  <br/>
   <a href="https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4" target="_blank">
-    <img src="https://img.shields.io/badge/Launch_3D_Quantum_Lab-Open_in_New_Tab-00E5FF?style=for-the-badge&logo=google&logoColor=black" alt="Launch 3D Quantum Lab" />
+    <img src="https://img.shields.io/badge/Launch_3D_Quantum_Lab-Open_Full_Screen-00E5FF?style=for-the-badge&logo=google&logoColor=black" alt="Launch 3D Quantum Lab" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://vellorpavan.github.io/Trotter_error/" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub_Pages-Zero_Install_Web_Demo-10B981?style=for-the-badge&logo=github&logoColor=white" alt="Live Demo" />
   </a>
 </div>
 
@@ -303,7 +285,7 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
 |    • Interactive Orbit, Zoom, Pan Controls      • Live |0000> ... |1111> Probabilities   |
 |    • Real-time Transparent Bloch Spheres        • Neel State |1010> Decay Tracking      |
 |    • Live Bloch Vector (X, Y, Z) and Purity     • Staggered Magnetization Realtime Ms   |
-|    • Processors A (Tree), B (Hex), D (Grid)     • Projective Shot Readout Emulation     |
+|    • Processors A (Tree), B (Hex), D (Ladder)   • Projective Shot Readout Emulation     |
 |                                                                                         |
 |   [ Circuit Timeline Scrubber & Step Player: Step 1 .. n -> Final Readout ]              |
 +-----------------------------------------------------------------------------------------+
@@ -311,26 +293,23 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
 
 ### 🌟 Key Interactive Capabilities
 1. **Real-Time 3D Bloch Spheres:** Each qubit node renders a 3D transparent sphere with a live Bloch vector arrow $\vec{r} = (\langle X \rangle, \langle Y \rangle, \langle Z \rangle)$, length $|\vec{r}|$, and purity $\text{Tr}(\rho^2)$.
-2. **Dynamic Topology Switching:** Instantly toggle between **Processor A** (5-qubit tree), **Processor B** (9-qubit heavy-hex), and **Processor D** (9-qubit 3×3 grid with four 4-cycles) to inspect spatial routing differences.
+2. **Dynamic Topology Switching:** Instantly toggle between **Processor A** (5-qubit tree), **Processor B** (9-qubit heavy-hex), and **Processor D** (6-qubit 2×3 ladder) to inspect spatial routing differences.
 3. **16-State Amplitude Bar Chart:** High-resolution histogram displaying all computational basis probabilities $|0000\rangle \dots |1111\rangle$ and quantum phase angles as the state evolves from Néel $|1010\rangle$ under the transverse field.
 4. **Playback & Scrubbing Timeline:** Scrub through Trotter evolution steps ($t \in [0, 2.0]$) with variable playback speeds ($0.5\times, 1.0\times, 2.0\times, 4.0\times$), stepping forward or backward gate by gate.
 5. **Projective Readout Emulation:** Sample 4,096-shot projective measurements with simulated readout error directly in the browser.
 
 ### 🚀 How to Launch the 3D Simulation
 
-- **Option 1 (Interactive Cloud / Embedded View):**
-  Open the interactive simulation directly in full screen:
+- **Option 1 (Interactive Cloud / Full Screen):**
   👉 **[Interactive 3D Quantum Simulation Lab](https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4)**
 
 - **Option 2 (GitHub Pages Live Deployment):**
-  Explore the deployed zero-install WebGL lab:
   👉 **[https://vellorpavan.github.io/Trotter_error/](https://vellorpavan.github.io/Trotter_error/)**
 
 - **Option 3 (1-Click Local Browser Launch):**
   ```bash
   open visualization/index.html
   ```
-  *(Or double-click `visualization/index.html` in macOS Finder / Windows Explorer).*
 
 - **Option 4 (Local HTTP Server):**
   ```bash
@@ -348,27 +327,27 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
 ```
 .
 ├── README.md                      # Primary hackathon documentation & visual dashboard
-├── report.md                      # Comprehensive 8-page scientific technical paper (Phase 2)
-├── main.ipynb                     # Executable master notebook (recomputes end-to-end in ~7s)
+├── report.md                      # Comprehensive scientific technical paper (Phase 2)
+├── main.ipynb                     # Executable master notebook (recomputes end-to-end in ~4.5s)
 ├── run_all.py                     # Headless standalone CLI reproduction script (~4s)
 ├── qff_sim.py                     # Official simulation module (byte-for-byte identical to kit)
-├── requirements.txt               # Pinned package dependencies
+├── requirements.txt               # Pinned package dependencies (Qiskit 1.4.6)
 ├── visualization/
 │   └── index.html                 # Self-contained 3D WebGL laboratory (1-click browser run)
 ├── src/
 │   └── Interactive3DSimulation.jsx# Full React 18 + Three.js interactive component
 ├── processors/
-│   └── processor_D.json           # Objective 2 co-designed 9-qubit 3x3 grid processor
+│   └── processor_D.json           # Objective 2 co-designed 6-qubit 2x3 ladder processor
 ├── results/
 │   ├── figures/                   # 6 high-resolution publication figures (PNG)
 │   └── tables/                    # 5 official CSV benchmark tables (zero NaN values)
 ├── tests/
-│   └── test_all.py                # 14 automated unit tests covering all 5 objectives
+│   └── test_all.py                # 14 automated unit tests covering all objectives
 ├── tools/
 │   └── check_processor_d.py       # Official verification checker for Processor D
 ├── starter/                       # Clean copy of original challenge-kit distribution
 │   └── KIT_README.md              # Original starter README (matches MANIFEST.sha256)
-└── Phase_1/                       # Complete Phase 1 Archive (Code, Tests, Reports)
+└── Phase_1/                       # Complete Phase 1 Historical Archive (Qiskit 2.6.1)
     ├── report.md                  # Phase 1 comprehensive scientific report
     ├── Architecture.md            # Phase 1 architecture & model design documentation
     ├── ARCHITECTURE.md.pdf        # Rendered Phase 1 architecture paper
@@ -449,7 +428,7 @@ jupyter nbconvert --to notebook --execute --inplace main.ipynb
 ## 🧪 Reproducibility, Assumptions & Limitations
 
 - **Seed Discipline:** Fixed random seeds (`SEED = 42`) guarantee identical numerical output across runs.
-- **Pure Python Dependencies:** Only standard scientific libraries (`qiskit`, `qiskit-aer`, `numpy`, `scipy`, `matplotlib`) are required.
+- **Pure Python Dependencies:** Only standard scientific libraries (`qiskit==1.4.6`, `qiskit-aer==0.18.0`, `numpy`, `scipy`, `matplotlib`) are required.
 - **Portability:** Pathing is dynamically relative via `os.path.dirname(os.path.abspath(__file__))`, running identically on macOS, Linux, and Windows/WSL2.
 - **Simulation Assumptions:** Evaluated under classical Markovian noise models. Physical QPUs exhibit non-Markovian noise, spectator cross-talk, and calibration drift.
 
@@ -458,6 +437,7 @@ jupyter nbconvert --to notebook --execute --inplace main.ipynb
 ## 👥 Team & AI Disclosure
 
 ### Team StepWise-Q
+- **Members:** Jagadesh ([@jagadesh-jpg](https://github.com/jagadesh-jpg)) & Vellor Pavan ([@Vellorpavan](https://github.com/Vellorpavan))
 - **Institution:** SRM University-AP
 - **Track:** Track 3 (Quantum Simulation) · Problem Statement PS-S3
 - **Venue:** Qiskit Fall Fest 2026 Phase 2 Offline Hackathon
