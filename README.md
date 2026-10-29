@@ -268,13 +268,21 @@ At optimal operating point $n^* = 7$ on Processor D, physical noise depresses ra
 To complement our static benchmarking figures, StepWise-Q includes a **hardware-accelerated 3D WebGL laboratory** built with **Three.js** and **React**. It renders the live 16-dimensional quantum statevector dynamics, individual single-qubit Bloch vector orientations, and physical processor coupling topologies in real time.
 
 <div align="center">
-  <a href="https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4" target="_blank">
-    <img src="https://img.shields.io/badge/Launch_3D_Quantum_Lab-Open_Full_Screen-00E5FF?style=for-the-badge&logo=google&logoColor=black" alt="Launch 3D Quantum Lab" />
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://vellorpavan.github.io/Trotter_error/" target="_blank">
-    <img src="https://img.shields.io/badge/GitHub_Pages-Zero_Install_Web_Demo-10B981?style=for-the-badge&logo=github&logoColor=white" alt="Live Demo" />
-  </a>
+
+![StepWise-Q 3D Quantum Simulation Laboratory](results/figures/simulation_3d_demo.gif)
+
+*Figure 7: Live 3D Hardware Simulation in the README. Orbiting 3D perspective of Processor D (6-Qubit 2×3 Ladder) natively embedding the periodic ring TFIM Hamiltonian with zero routing SWAPs, real-time rotating Bloch vectors, Staggered Magnetization $M_s(t)$ trajectory tracking, and 16-basis computational state probabilities.*
+
+<br/>
+
+<a href="https://vellorpavan.github.io/Trotter_error/" target="_blank">
+  <img src="https://img.shields.io/badge/Launch_Interactive_WebGL_Lab-Full_Screen_Orbit_Controls-00E5FF?style=for-the-badge&logo=three.js&logoColor=black" alt="Launch 3D Quantum Lab" />
+</a>
+&nbsp;&nbsp;
+<a href="https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4" target="_blank">
+  <img src="https://img.shields.io/badge/Cloud_Interactive_View-Open_in_New_Tab-10B981?style=for-the-badge&logo=google&logoColor=white" alt="Cloud Interactive View" />
+</a>
+
 </div>
 
 ```
