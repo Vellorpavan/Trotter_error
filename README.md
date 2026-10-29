@@ -366,7 +366,6 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
 ├── run_all.py                     # Headless standalone CLI reproduction script (~4s)
 ├── qff_sim.py                     # Official simulation module (byte-for-byte identical to kit)
 ├── requirements.txt               # Pinned package dependencies
-├── MANIFEST.sha256                # Official challenge-kit checksum manifest
 ├── visualization/
 │   └── index.html                 # Self-contained 3D WebGL laboratory (1-click browser run)
 ├── src/
