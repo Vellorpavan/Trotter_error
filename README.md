@@ -8,7 +8,9 @@
 [![Track](https://img.shields.io/badge/Track-3:_Quantum_Simulation-0062FF?style=for-the-badge)](https://qiskit.org/)
 [![Problem](https://img.shields.io/badge/Problem-PS--S3:_Trotter_Noise_Accumulation-198038?style=for-the-badge)](https://qiskit.org/)
 [![Live 3D Lab](https://img.shields.io/badge/Live_Demo-3D_Quantum_Lab-00E5FF?style=for-the-badge&logo=three.js&logoColor=black)](https://vellorpavan.github.io/Trotter_error/)
-[![Phase 1 Branch](https://img.shields.io/badge/Phase_1-Branch_&_Archive-FF9800?style=for-the-badge&logo=git&logoColor=white)](https://github.com/Vellorpavan/Trotter_error/tree/phase1)
+[![Phase 2 Report](https://img.shields.io/badge/Report-Phase_2_Technical_Paper-0062FF?style=for-the-badge&logo=read-the-docs&logoColor=white)](report.md)
+[![Phase 1 Folder](https://img.shields.io/badge/Phase_1-Directory_Archive-FF9800?style=for-the-badge&logo=github&logoColor=white)](Phase_1/)
+[![Phase 1 Report](https://img.shields.io/badge/Report-Phase_1_Report-10B981?style=for-the-badge&logo=read-the-docs&logoColor=white)](Phase_1/report.md)
 [![Tests](https://img.shields.io/badge/Tests-14%2F14_Passing-059669?style=for-the-badge&logo=checkmarx&logoColor=white)](tests/test_all.py)
 [![Python](https://img.shields.io/badge/Python-3.10_%7C_3.11_%7C_3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 
@@ -18,9 +20,11 @@
   <b>Problem Statement:</b> <code>PS-S3</code>
 </p>
 
+[Phase 2 Report (report.md)](report.md) •
+[Phase 1 Folder (Phase_1/)](Phase_1/) •
+[Phase 1 Report](Phase_1/report.md) •
 [Key Results](#-executive-dashboard--key-results) •
 [Section 7 Definitions](#-compliance-with-official-definitions-section-7) •
-[Hamiltonian & Physics](#-physical-system--hamiltonian-formulation) •
 [Processor D Co-Design](#-processor-topologies--processor-d-co-design) •
 [Visual Results](#-visual-experimental-findings) •
 [Bell Experiment](#-common-phase-2-bell-state-verification) •
@@ -29,6 +33,20 @@
 [Quickstart](#-quickstart--reproduction-guide)
 
 </div>
+
+---
+
+## 📑 Technical Reports & Documentation
+
+All technical documentation and deliverables for both phases are accessible directly in this repository:
+
+| Deliverable | Location | Description |
+|:---|:---:|:---|
+| 📘 **Phase 2 Technical Report** | [**`report.md`**](report.md) | Official 8-page final paper: Bell-state verification, Processor D co-design, Trotter crossover derivations, and ZNE mitigation. |
+| 📗 **Phase 1 Technical Report** | [**`Phase_1/report.md`**](Phase_1/report.md) | Phase 1 scientific report: analytical error scaling laws, reference benchmarks, and convergence limits. |
+| 📕 **Phase 1 System Architecture** | [**`Phase_1/Architecture.md`**](Phase_1/Architecture.md) | Theoretical architecture specification and experimental framework documentation. |
+| 📑 **Phase 1 Architecture PDF** | [**`Phase_1/ARCHITECTURE.md.pdf`**](Phase_1/ARCHITECTURE.md.pdf) | Publication-formatted PDF of the Phase 1 architectural specifications. |
+| 📁 **Phase 1 Codebase & Tests** | [**`Phase_1/`**](Phase_1/) | Standalone Phase 1 repository root containing all original test suites, data, and notebooks. |
 
 ---
 
@@ -364,7 +382,7 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
 │   └── check_processor_d.py       # Official verification checker for Processor D
 ├── starter/                       # Clean copy of original challenge-kit distribution
 │   └── KIT_README.md              # Original starter README (matches MANIFEST.sha256)
-└── phase_one/                     # Complete Phase 1 Archive (Branch: 'phase1')
+└── Phase_1/                       # Complete Phase 1 Archive (Code, Tests, Reports)
     ├── report.md                  # Phase 1 comprehensive scientific report
     ├── Architecture.md            # Phase 1 architecture & model design documentation
     ├── ARCHITECTURE.md.pdf        # Rendered Phase 1 architecture paper
