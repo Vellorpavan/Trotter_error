@@ -262,7 +262,7 @@ To complement our static benchmarking figures, StepWise-Q includes a **hardware-
   <img src="https://img.shields.io/badge/Launch_Interactive_WebGL_Lab-Full_Screen_Orbit_Controls-00E5FF?style=for-the-badge&logo=three.js&logoColor=black" alt="Launch 3D Quantum Lab" />
 </a>
 &nbsp;&nbsp;
-<a href="https://gemini.google.com/share/741c9c5cceca?social_preview=false&skid=6c798fbe-3abe-466e-aaea-d979cbf5dad4" target="_blank">
+<a href="https://stepwise-q-interactive-3d-quantum-noise-simulator.ai.studio" target="_blank">
   <img src="https://img.shields.io/badge/Cloud_Interactive_View-Open_in_New_Tab-10B981?style=for-the-badge&logo=google&logoColor=white" alt="Cloud Interactive View" />
 </a>
 
