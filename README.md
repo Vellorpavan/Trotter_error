@@ -16,8 +16,9 @@
 [![Problem](https://img.shields.io/badge/Problem-PS--S3:_Trotter_Noise_Accumulation-198038?style=for-the-badge)](https://qiskit.org/)
 [![Live 3D Lab](https://img.shields.io/badge/Live_Demo-3D_Quantum_Lab-00E5FF?style=for-the-badge&logo=three.js&logoColor=black)](https://vellorpavan.github.io/Trotter_error/)
 [![Phase 2 Report](https://img.shields.io/badge/Report-Phase_2_Technical_Paper-0062FF?style=for-the-badge&logo=read-the-docs&logoColor=white)](report.md)
+[![Report PDF](https://img.shields.io/badge/PDF-Technical_Paper-E53935?style=for-the-badge&logo=adobe-acrobat-reader&logoColor=white)](report.pdf)
+[![Submission Guide](https://img.shields.io/badge/Submission-Portal_Guide-10B981?style=for-the-badge&logo=markdown&logoColor=white)](SUBMISSION.md)
 [![Phase 1 Archive](https://img.shields.io/badge/Phase_1-Historical_Archive-FF9800?style=for-the-badge&logo=github&logoColor=white)](Phase_1/)
-[![Phase 1 Report](https://img.shields.io/badge/Report-Phase_1_Report-10B981?style=for-the-badge&logo=read-the-docs&logoColor=white)](Phase_1/report.md)
 [![Tests](https://img.shields.io/badge/Tests-14%2F14_Passing-059669?style=for-the-badge&logo=checkmarx&logoColor=white)](tests/test_all.py)
 [![Python](https://img.shields.io/badge/Python-3.10_%7C_3.11_%7C_3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 
@@ -29,6 +30,8 @@
 </p>
 
 [Phase 2 Report (report.md)](report.md) •
+[Report PDF (report.pdf)](report.pdf) •
+[Submission Guide (SUBMISSION.md)](SUBMISSION.md) •
 [Phase 1 Archive (Phase_1/)](Phase_1/) •
 [Phase 1 Report](Phase_1/report.md) •
 [Key Results](#-executive-dashboard--key-results) •
