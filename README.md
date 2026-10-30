@@ -5,7 +5,7 @@
 
 ![StepWise-Q 3D Quantum Simulation Laboratory](results/figures/simulation_3d_demo.gif)
 
-*Figure 7: Live 3D Hardware Simulation in the README. Orbiting 3D perspective of Processor D (6-Qubit 2×3 Ladder) natively embedding the periodic ring TFIM Hamiltonian with zero routing SWAPs, real-time rotating Bloch vectors, Staggered Magnetization $M_s(t)$ trajectory tracking, and 16-basis computational state probabilities.*
+*Figure 7: Live 3D Hardware Simulation in the README. Orbiting 3D perspective of Processor D (6-Qubit 2×3 Ladder) natively embedding the periodic ring measures the optimal Trotter step count n∗for a 4-spinTFIM Hamiltonian with zero routing SWAPs, real-time rotating Bloch vectors, Staggered Magnetization $M_s(t)$ trajectory tracking, and 16-basis computational state probabilities.*
 
 <br/>
 
@@ -113,13 +113,6 @@ The physical benchmark is the 1D Transverse-Field Ising Model on an $N=4$ period
 
 $$H = -J \sum_{i=0}^{3} Z_i Z_{i+1} - g \sum_{i=0}^{3} X_i, \quad \text{with periodic boundary } Z_4 \equiv Z_0$$
 
-```
-                   (0) ---------- (1)
-                    |              |      J = 1.0 (Nearest-Neighbor Coupling)
-                    |    N = 4     |      g = 1.0 (Transverse Field)
-                    |     Ring     |      T = 2.0 (Evolution Time)
-                   (3) ---------- (2)
-```
 
 - **Evolution Parameters:** $J = 1.0$, $g = 1.0$, total duration $T = 2.0$.
 - **Initial State:** Antiferromagnetic Néel state $|\psi_0\rangle = |1010\rangle$ (computational basis index 10).
