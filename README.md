@@ -113,13 +113,6 @@ The physical benchmark is the 1D Transverse-Field Ising Model on an $N=4$ period
 
 $$H = -J \sum_{i=0}^{3} Z_i Z_{i+1} - g \sum_{i=0}^{3} X_i, \quad \text{with periodic boundary } Z_4 \equiv Z_0$$
 
-```
-                   (0) ---------- (1)
-                    |              |      J = 1.0 (Nearest-Neighbor Coupling)
-                    |    N = 4     |      g = 1.0 (Transverse Field)
-                    |     Ring     |      T = 2.0 (Evolution Time)
-                   (3) ---------- (2)
-```
 
 - **Evolution Parameters:** $J = 1.0$, $g = 1.0$, total duration $T = 2.0$.
 - **Initial State:** Antiferromagnetic Néel state $|\psi_0\rangle = |1010\rangle$ (computational basis index 10).
